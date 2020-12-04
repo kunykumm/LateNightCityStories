@@ -1,0 +1,84 @@
+div.title {
+    position: fixed;
+    left: 60px;
+    top: 55px;
+    color: #b8b8b8;
+    font-family: "Helvetica";
+}
+
+div.mood {
+    position: fixed;
+    left: 60px;
+    top: 88px;
+    color: #888888;
+    font-family: "Helvetica";
+    font-size: 12px;
+}
+
+div.warmBtn {
+    position: fixed;
+    left: 60px;
+    top: 110px;
+}
+
+div.coldBtn {
+    position: fixed;
+    left: 140px;
+    top: 110px;
+}
+
+.btn {
+    border: none;
+    background-color: #1a1a1a;
+    padding: 7px 20px;
+    font-size: 12px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.warm {color: orange;}
+.warm:hover {background: rgb(255, 94, 0);}
+.cold {color: dodgerblue;}
+.cold:hover {background: rgba(0, 61, 122, 0.466);}
+.submitBtn {color: #b8b8b8;}
+input[type="submit"]:hover {background: black}
+
+div.story {
+    position: fixed;
+    left: 60px;
+    top: 155px;
+    color: #888888;
+    font-family: "Helvetica";
+    font-size: 12px;
+}
+
+.inputField {
+    color: #ffffff;
+    background-color: black;
+    font-size: 12px;
+}
+
+div.firstWord {
+    position: fixed;
+    left: 60px;
+    top: 175px;
+}
+
+div.secondWord {
+    position: fixed;
+    left: 60px;
+    top: 200px;
+}
+
+div.thirdWord {
+    position: fixed;
+    left: 60px;
+    top: 225px;
+}
+
+div.genButton {
+    position: fixed;
+    left: 60px;
+    top: 262px;
+}
+

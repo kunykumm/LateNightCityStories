@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+  <link rel="stylesheet" type="text/css" href="forhtml.css">
+  <script type="text/javascript" src="latenightcitystories.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Late Night City Stories</title>
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+    }
+  </style>
+  <script src="../p5.js"></script>
+  <script src="latenightcitystories.js"></script>
+</head>
+
+<body style = "background-color: #0c0c0c;">
+  <div class = "title">
+    Late Night City Stories
+  </div>
+  <div class = "mood">
+    Choose mood of your city:
+  </div>
+  <div class = "warmBtn">
+    <button class="btn warm">
+      warm
+    </button>
+  </div>
+  <div class = "coldBtn">
+    <button class="btn cold">
+      cold
+    </button>
+  </div>
+  <div class = "story">
+    Tell your story in 3 words:
+  </div>
+  <form action="javascript:;" onsubmit="getWords(this)">
+    <div class = "firstWord">
+      <input type="text" id="firstW" name="firstW" class="inputField"><br>
+    </div>
+    <div class = "secondWord">
+      <input type="text" id="secondW" name="secondW" class="inputField"><br>
+    </div>
+    <div class = "thirdWord">
+      <input type="text" id="thirdW" name="thirdW" class="inputField"><br><br>
+    </div>
+    <div class = "genButton">
+      <input type="submit" value="generate " class="btn submitBtn">
+    </div>
+  </form>
+</body>
+
+</html>
