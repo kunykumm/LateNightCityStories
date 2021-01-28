@@ -22,6 +22,7 @@ var firstEmotions;
 var secondEmotions;
 var thirdEmotions;
 var sumOfOnes;
+var positionVector;
 
 var generate;
 var pOne;
@@ -65,6 +66,7 @@ function setup() {
   xShift = random(0, 100);
   yShift = random(0, 100);
   sumOfOnes = 0;
+  positionVector = [];
 }
 
 function setupWindow() {
@@ -96,8 +98,9 @@ function getWords() {
   }
 
   validateWords();
-  calculateCityCentre();
   makeSumOfOnes();
+  calculateCityCentre();
+  //print("PosVec" + positionVector);
 
   generate = true;
   pOne = true;
@@ -217,6 +220,9 @@ function calculateCityCentre() {
   if (xCity < 1) xCitySign = -1;
   if (yCity < 1) yCitySign = -1;
 
+  // for(i = 0; i < 2 * sumOfOnes; i++) {
+  //   positionVector[i] = random(1, 12);
+  // }
 }
 
 function makeSumOfOnes() {
@@ -270,45 +276,16 @@ function generateNoise() {
   rect(-width/2, -height/2, width, height);
 }
 
-// function generateCentreNoise() {
-
-//   stroke(255, random(150, 170), 26);
-//   noFill();
-
-//   print("startBezier");
-//   var x1 = width * noise(timeBezier + 15);
-//   var x2 = width * noise(timeBezier + 25);
-//   var x3 = width * noise(timeBezier + 35);
-//   var x4 = width * noise(timeBezier + 45);
-
-//   var y1 = height * noise(timeBezier + 55);
-//   var y2 = height * noise(timeBezier + 65);
-//   var y3 = height * noise(timeBezier + 75);
-//   var y4 = height * noise(timeBezier + 85);
-
-//   print("cycleBezier");
-//   let steps = 10;
-//   for (let i = 0; i < steps; ++i) {
-//     let timeCycle = i / steps * 50;
-//     let x = bezierPoint(x1, x2, x3, x4, timeCycle);
-//     let y = bezierPoint(y1, y2, y3, y4, timeCycle);
-//     square(x, y, random(3, 5));
-//   }
-
-//   //bezier(x1, y1, x2, y2, x3, y3, x4, y4);
-
-//   timeBezier += 0.005;
-//   print("endBezier");
-// }
-
 function generateCentreNoise() {        //Poincare Disk Model
 
   print("generateCity");
+  var prevXPos = xCity;
+  var prevYPos = yCity;
 
-  stroke(255, random(150, 170), 45);
-  noFill();
+  stroke(255, random(150, 170), 25);
+  fill(0, 75);
 
-  for (let i = 0; i < sumOfOnes * 1000; i++) {
+  for (let i = 0; i < sumOfOnes * 800; i++) {
 
     let theta = random(0, TWO_PI);
     var g = random(xCity * (-10), yCity * 10);
@@ -321,11 +298,31 @@ function generateCentreNoise() {        //Poincare Disk Model
     let y = height / (random(0, 4)) * r * sin(theta);
 
     if (i % sumOfOnes != 0) {
-      var xShiftN = 0
-      var yShiftN = 0;
+
       for (j = 0; j < sumOfOnes; j++) {
-        if (i % j == 0) square(x + xShiftN + xCitySign * xCity * (width/6) * random(5, 10), y + yShiftN + yCitySign * yCity * (width/6) * random(5, 10), random(3, 5));
+        //var xPos = x + positionVector[2*i] * (5) + xCitySign * xCity * (width/6) * random(5, 10);
+        //var yPos = y + positionVector[2*i + 1] * (5) + yCitySign * yCity * (width/6) * random(5, 10);
+        var xPos = x + xCitySign * xCity * (width/20) * random(5, 10);
+        var yPos = y + yCitySign * yCity * (width/20) * random(5, 10);
+
+        if (i % j == 0) {
+          stroke(255, random(150, 170), 25);
+          strokeWeight(random(0.5));
+          square(xPos, yPos, random(3, 5));
+        }
       }
     }
+
+    if (i % 40 == 0) {
+      stroke(255, random(150, 170), 25);
+      strokeWeight(random(0.4));
+      line(x, y, xPos, yPos);
+    } else if (i % 20 == 0) {
+      stroke(0, 50);
+      strokeWeight(random(0.4));
+      line(x, y, xPos, yPos);
+    }
+    prevXPos = x; 
+    prevYPos = y;
   }
 }
