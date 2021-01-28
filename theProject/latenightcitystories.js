@@ -12,6 +12,8 @@ var description;
 var generateButton;
 
 // PROCESSING STUFF
+var bgCity;
+
 var firstWord;
 var secondWord;
 var thirdWord;
@@ -19,6 +21,7 @@ var thirdWord;
 var firstEmotions;
 var secondEmotions;
 var thirdEmotions;
+var sumOfOnes;
 
 var generate;
 var pOne;
@@ -28,6 +31,10 @@ var pThree;
 var pOneCounter;
 var xCity;
 var yCity;
+var xCitySign;
+var yCitySign;
+var xShift;
+var yShift;
 var timeBezier;
 
 function preload() {
@@ -51,12 +58,20 @@ function setup() {
   pThree = false;
   pOneCounter = 0;
   timeBezier = 0;
+  xCity = 0;
+  yCity = 0;
+  xCitySign = 1;
+  yCitySign = 1;
+  xShift = random(0, 100);
+  yShift = random(0, 100);
+  sumOfOnes = 0;
 }
 
 function setupWindow() {
-  canvas = createCanvas(600, 600);
+  canvas = createCanvas(600, 600, WEBGL);
   canvas.position(260, 50);
-  background(0);
+  //background(0);
+  bgCity = createGraphics(width, height);
 }
 
 function getWords() {
@@ -82,6 +97,7 @@ function getWords() {
 
   validateWords();
   calculateCityCentre();
+  makeSumOfOnes();
 
   generate = true;
   pOne = true;
@@ -161,7 +177,7 @@ function draw() {
   }
 
   if (pTwo) {
-    generateCentreNoise();
+
   }
 
   if (pThree) {
@@ -171,23 +187,44 @@ function draw() {
 }
 
 function phaseOne() {
-  //calculateCityCentre();
   generateNoise();
-  //generateCentreNoise();
+  generateCentreNoise();
   pOneCounter++;
   if (pOneCounter == 10) {
     pOne = false;
     pTwo = true;
   }
+  bgCity = createGraphics(width, height);
 }
 
 function calculateCityCentre() {
+
+  print("CalculateCityCentre");
   for (i = 0; i < 5; ++i) {
-    xCity = xCity + firstEmotions[i] + secondEmotions[i] + thirdEmotions[i];
-    yCity = yCity + firstEmotions[i + 5] + secondEmotions[i + 5] + thirdEmotions[i + 5];
+
+    if (firstEmotions[i] == '1') xCity++;
+    if (secondEmotions[i] == '1') xCity++;
+    if (thirdEmotions[i] == '1') xCity++;
+
+    if (firstEmotions[i + 5] == '1') yCity++;
+    if (secondEmotions[i + 5] == '1') yCity++;
+    if (thirdEmotions[i + 5] == '1') yCity++;
+
   }
-  xCity = xCity / 3;
-  yCity = yCity / 3;
+  xCity = xCity / 6;
+  yCity = yCity / 6;
+
+  if (xCity < 1) xCitySign = -1;
+  if (yCity < 1) yCitySign = -1;
+
+}
+
+function makeSumOfOnes() {
+  for (i = 0; i < 10; ++i) {
+    if (firstEmotions[i] == '1') sumOfOnes++;
+    if (secondEmotions[i] == '1') sumOfOnes++;
+    if (thirdEmotions[i] == '1') sumOfOnes++;
+  }
 }
 
 function generateNoise() {
@@ -210,11 +247,14 @@ function generateNoise() {
     fillBackground = 80;
   }
 
-  for (x = 0; x < width; x += step) {
-    for (y = 0; y < height; y += step) {
+  for (x = -width/2; x < width/2; x += step) {
+    for (y = -height/2; y < height/2; y += step) {
       
-      nx = map(x, 0, width, 0, n_range);
-      ny = map(y, 0, height,0, n_range);
+      // nx = map(x, 0, width, 0, n_range);
+      // ny = map(y, 0, height,0, n_range);
+
+      nx = map(x, -width/2, width/2, 0, n_range);
+      ny = map(y, -height/2, height/2, 0, n_range);
 
       n_value = noise(nx, ny) * (220 - fillBackground);
       
@@ -227,34 +267,65 @@ function generateNoise() {
 
   noStroke();
   fill(0, 10);
-  rect(0, 0, width, height);
+  rect(-width/2, -height/2, width, height);
 }
 
-function generateCentreNoise() {
+// function generateCentreNoise() {
 
-  stroke(255, random(150, 170), 26);
-  fill(0);
+//   stroke(255, random(150, 170), 26);
+//   noFill();
 
-  print("startBezier");
-  var x1 = width * noise(timeBezier + 15);
-  var x2 = width * noise(timeBezier + 25);
-  var x3 = width * noise(timeBezier + 35);
-  var x4 = width * noise(timeBezier + 45);
+//   print("startBezier");
+//   var x1 = width * noise(timeBezier + 15);
+//   var x2 = width * noise(timeBezier + 25);
+//   var x3 = width * noise(timeBezier + 35);
+//   var x4 = width * noise(timeBezier + 45);
 
-  var y1 = height * noise(timeBezier + 55);
-  var y2 = height * noise(timeBezier + 65);
-  var y3 = height * noise(timeBezier + 75);
-  var y4 = height * noise(timeBezier + 85);
+//   var y1 = height * noise(timeBezier + 55);
+//   var y2 = height * noise(timeBezier + 65);
+//   var y3 = height * noise(timeBezier + 75);
+//   var y4 = height * noise(timeBezier + 85);
 
-  print("cycleBezier");
-  let steps = 10;
-  for (let i = 0; i < steps; ++i) {
-    let timeCycle = i / steps * 50;
-    let x = bezierPoint(x1, x2, x3, x4, timeCycle);
-    let y = bezierPoint(y1, y2, y3, y4, timeCycle);
-    square(x, y, random(3, 5));
+//   print("cycleBezier");
+//   let steps = 10;
+//   for (let i = 0; i < steps; ++i) {
+//     let timeCycle = i / steps * 50;
+//     let x = bezierPoint(x1, x2, x3, x4, timeCycle);
+//     let y = bezierPoint(y1, y2, y3, y4, timeCycle);
+//     square(x, y, random(3, 5));
+//   }
+
+//   //bezier(x1, y1, x2, y2, x3, y3, x4, y4);
+
+//   timeBezier += 0.005;
+//   print("endBezier");
+// }
+
+function generateCentreNoise() {        //Poincare Disk Model
+
+  print("generateCity");
+
+  stroke(255, random(150, 170), 45);
+  noFill();
+
+  for (let i = 0; i < sumOfOnes * 1000; i++) {
+
+    let theta = random(0, TWO_PI);
+    var g = random(xCity * (-10), yCity * 10);
+    let h = randomGaussian(g);
+
+    let r = (exp(h) - 1) / (exp(h) + 1);
+    // let x = width / 2 * r * cos(theta);
+    // let y = height / 2 * r * sin(theta);
+    let x = width / (random(0, 4)) * r * cos(theta);
+    let y = height / (random(0, 4)) * r * sin(theta);
+
+    if (i % sumOfOnes != 0) {
+      var xShiftN = 0
+      var yShiftN = 0;
+      for (j = 0; j < sumOfOnes; j++) {
+        if (i % j == 0) square(x + xShiftN + xCitySign * xCity * (width/6) * random(5, 10), y + yShiftN + yCitySign * yCity * (width/6) * random(5, 10), random(3, 5));
+      }
+    }
   }
-
-  timeBezier += 0.005;
-  print("endBezier");
 }
