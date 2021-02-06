@@ -12,7 +12,6 @@ var description;
 var generateButton;
 
 // PROCESSING STUFF
-var bgCity;
 
 var firstWord;
 var secondWord;
@@ -29,6 +28,10 @@ var pOne;
 var pTwo;
 var pThree;
 
+
+//---                                                                                        ---//
+//------------------------------------------- SETUP --------------------------------------------//
+//---                                                                                        ---//
 
 function preload() {
   jsonEndIndices = [966, 1682, 3112, 4052, 4689, 5311, 5732, 6199, 6922, 7028, 7103, 7568, 8268,
@@ -63,8 +66,11 @@ function setup() {
 function setupWindow() {
   canvas = createCanvas(600, 600, WEBGL);
   canvas.position(260, 50);
-  bgCity = createGraphics(width, height);
 }
+
+//---                                                                                        ---//
+//---------------------------------------- JSON PARSING ----------------------------------------//
+//---                                                                                        ---//
 
 function getWords() {
   if (generate) return;
@@ -173,7 +179,7 @@ function findTheEmotions(wordIndex) {
                 jsonData[wordIndex].Trust
                 ]
   }
-  
+
   print(emotions);
   print("Emotions filled.");
   return emotions;
@@ -186,12 +192,16 @@ function makeSumOfOnes() {
     if (thirdEmotions[i] == '1') sumOfOnes++;
   }
 }
+
+//---                                                                                        ---//
+//-------------------------------------------- DRAW --------------------------------------------//
+//---                                                                                        ---//
   
 function draw() {
   if (!generate) return;
   
   if (pOne) {
-
+    phaseOne();
   }
 
   if (pTwo) {
@@ -208,12 +218,12 @@ function phaseOne() {
 
 }
 
-function generateNoise() {
+function generateBaseNet() {
   
 
 }
 
-function generateCentreNoise() { 
+function generateAroundNet() { 
 
 
 }
