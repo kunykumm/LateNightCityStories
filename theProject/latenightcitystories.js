@@ -177,9 +177,12 @@ function draw() {
   if (pOne) {
     print("phaseOne");
     phaseOne();
+    //pOne = false;
+    //pTwo = true;
   }
 
   if (pTwo) {
+    //generateBuildings();
 
   }
 
@@ -220,9 +223,6 @@ function calculateCityCentre() {
   if (xCity < 1) xCitySign = -1;
   if (yCity < 1) yCitySign = -1;
 
-  // for(i = 0; i < 2 * sumOfOnes; i++) {
-  //   positionVector[i] = random(1, 12);
-  // }
 }
 
 function makeSumOfOnes() {
@@ -255,9 +255,6 @@ function generateNoise() {
 
   for (x = -width/2; x < width/2; x += step) {
     for (y = -height/2; y < height/2; y += step) {
-      
-      // nx = map(x, 0, width, 0, n_range);
-      // ny = map(y, 0, height,0, n_range);
 
       nx = map(x, -width/2, width/2, 0, n_range);
       ny = map(y, -height/2, height/2, 0, n_range);
@@ -279,31 +276,31 @@ function generateNoise() {
 function generateCentreNoise() {        //Poincare Disk Model
 
   print("generateCity");
-  var prevXPos = xCity;
-  var prevYPos = yCity;
 
   stroke(255, random(150, 170), 25);
   fill(0, 75);
 
-  for (let i = 0; i < sumOfOnes * 800; i++) {
+  for (let i = 0; i < 1000; i++) {      //sumOfOnes * 800
 
     let theta = random(0, TWO_PI);
-    var g = random(xCity * (-10), yCity * 10);
+    var g = random(xCity * (-5), yCity * 5);
     let h = randomGaussian(g);
 
     let r = (exp(h) - 1) / (exp(h) + 1);
-    // let x = width / 2 * r * cos(theta);
-    // let y = height / 2 * r * sin(theta);
     let x = width / (random(0, 4)) * r * cos(theta);
     let y = height / (random(0, 4)) * r * sin(theta);
 
     if (i % sumOfOnes != 0) {
 
       for (j = 0; j < sumOfOnes; j++) {
-        //var xPos = x + positionVector[2*i] * (5) + xCitySign * xCity * (width/6) * random(5, 10);
-        //var yPos = y + positionVector[2*i + 1] * (5) + yCitySign * yCity * (width/6) * random(5, 10);
         var xPos = x + xCitySign * xCity * (width/20) * random(5, 10);
-        var yPos = y + yCitySign * yCity * (width/20) * random(5, 10);
+        var yPos = y + yCitySign * yCity * (height/20) * random(5, 10);
+
+        var dis = int(dist(xPos, yPos, x, y));
+
+        if (dis > width/6) {
+          if (random(10) < 7) continue;
+        }
 
         if (i % j == 0) {
           stroke(255, random(150, 170), 25);
@@ -313,16 +310,30 @@ function generateCentreNoise() {        //Poincare Disk Model
       }
     }
 
+    // if (i % 40 == 0) {
+    //   stroke(255, random(150, 170), 25);
+    //   strokeWeight(random(0.4));
+    //   line(xCity + random(-100, 100), yCity + random (-100, 100), xPos, yPos);
+    // } else if (i % 20 == 0) {
+    //     stroke(0, 50);
+    //     strokeWeight(random(0.4));
+    //     line(xCity + random(-100, 100), yCity + random (-100, 100), xPos, yPos);
+    // }
+
     if (i % 40 == 0) {
-      stroke(255, random(150, 170), 25);
-      strokeWeight(random(0.4));
-      line(x, y, xPos, yPos);
-    } else if (i % 20 == 0) {
-      stroke(0, 50);
-      strokeWeight(random(0.4));
-      line(x, y, xPos, yPos);
+
+    } 
+    else if (i % 20 == 0) {
+      
     }
-    prevXPos = x; 
-    prevYPos = y;
   }
+}
+
+function generateBuildings() {
+  push();
+  scale(1, 5, 1);
+  box();
+  pop();
+  translate(100,100,-100);
+  box();
 }
