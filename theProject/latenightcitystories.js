@@ -88,6 +88,8 @@ function getWords() {
   }
 
   validateWords();
+  fillAllEmotions();
+  print(allEmotions);
   makeSumOfOnes();
 
   generate = true;
@@ -98,6 +100,16 @@ function validateWords() {
   firstEmotions = validateAWord(firstWord);
   secondEmotions = validateAWord(secondWord);
   thirdEmotions = validateAWord(thirdWord);
+}
+
+function fillAllEmotions() {
+  allEmotions = [
+    [firstEmotions[0], firstEmotions[1], firstEmotions[2], firstEmotions[3], firstEmotions[4], firstEmotions[5]],
+    [firstEmotions[6], firstEmotions[7], firstEmotions[8], firstEmotions[9], secondEmotions[0], secondEmotions[1]],
+    [secondEmotions[2], secondEmotions[3], secondEmotions[4], secondEmotions[5], secondEmotions[6], secondEmotions[7]],
+    [secondEmotions[8], secondEmotions[9], thirdEmotions[0], thirdEmotions[1], thirdEmotions[2], thirdEmotions[3]],
+    [thirdEmotions[4], thirdEmotions[5], thirdEmotions[6], thirdEmotions[7], thirdEmotions[8], thirdEmotions[9]]
+  ]
 }
 
 function validateAWord(word) {
@@ -139,8 +151,15 @@ function findWordInJson(word, start, stop) {
 
 function findTheEmotions(wordIndex) {
   if (wordIndex == -1) {
-    emotions = ['1', '0', '0', '0', '0', '0', '1', '0', '0', '0'];
+
+    var options = ['0', '1'];
+    emotions = [];
+    for (i = 0; i < 10; ++i) {
+      emotions.push(random(options));
+    }
+
   } else {
+
     emotions = [
                 jsonData[wordIndex].Positive,
                 jsonData[wordIndex].Negative,
@@ -154,6 +173,7 @@ function findTheEmotions(wordIndex) {
                 jsonData[wordIndex].Trust
                 ]
   }
+  
   print(emotions);
   print("Emotions filled.");
   return emotions;
