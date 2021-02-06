@@ -28,6 +28,10 @@ var pOne;
 var pTwo;
 var pThree;
 
+// PHASE I.
+
+var planeTexture;
+
 
 //---                                                                                        ---//
 //------------------------------------------- SETUP --------------------------------------------//
@@ -48,6 +52,16 @@ function preload() {
 
 function setup() {
   setupWindow();
+  setupVariables();
+}
+
+function setupWindow() {
+  canvas = createCanvas(600, 600, WEBGL);
+  canvas.position(260, 50);
+  canvas.background(50);
+}
+
+function setupVariables() {
   generate = false;
   pOne = false;
   pTwo = false;
@@ -61,11 +75,7 @@ function setup() {
   xShift = random(0, 100);
   yShift = random(0, 100);
   sumOfOnes = 0;
-}
-
-function setupWindow() {
-  canvas = createCanvas(600, 600, WEBGL);
-  canvas.position(260, 50);
+  planeTexture = createGraphics(width, height);
 }
 
 //---                                                                                        ---//
@@ -202,6 +212,7 @@ function draw() {
   
   if (pOne) {
     phaseOne();
+    pOne = false;
   }
 
   if (pTwo) {
@@ -215,12 +226,25 @@ function draw() {
 }
 
 function phaseOne() {
-
+  generateBaseNet();
+  texture(planeTexture);
+  plane(width, height);
 }
 
 function generateBaseNet() {
-  
+  noStroke();
+  fill(255);
+  for (y = -58; y < 60; y += 24) {
+    for(x = -70; x < 70; x += 24) {
+      planeTexture.square(x + width/2, y + height/2, 20);
+    }
+  }
+  //planeTexture.circle(width/2, height/2, 5);    //debug circle
+  noFill();
+}
 
+function generateBuildingsNet() {
+  
 }
 
 function generateAroundNet() { 
