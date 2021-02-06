@@ -177,12 +177,9 @@ function draw() {
   if (pOne) {
     print("phaseOne");
     phaseOne();
-    //pOne = false;
-    //pTwo = true;
   }
 
   if (pTwo) {
-    //generateBuildings();
 
   }
 
