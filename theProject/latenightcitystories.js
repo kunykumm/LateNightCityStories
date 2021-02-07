@@ -31,6 +31,10 @@ var pThree;
 // PHASE I.
 
 var planeTexture;
+var maxHeight;
+var pOneCameraMov;
+var pOneCamCounter;
+var pOneCamAngle;
 
 
 //---                                                                                        ---//
@@ -76,6 +80,10 @@ function setupVariables() {
   yShift = random(0, 100);
   sumOfOnes = 0;
   planeTexture = createGraphics(width, height);
+  maxHeight = 120;
+  pOneCameraMov = false;
+  pOneCamCounter = 0;
+  pOneCamAngle = 0;
 }
 
 //---                                                                                        ---//
@@ -211,8 +219,10 @@ function draw() {
   if (!generate) return;
   
   if (pOne) {
+    canvas.background(50);
+    lights();
+    if (pOneCameraMov) moveCameraPOne();
     phaseOne();
-    pOne = false;
   }
 
   if (pTwo) {
@@ -227,20 +237,39 @@ function draw() {
 
 function phaseOne() {
   generateBaseNet();
-  texture(planeTexture);
-  plane(width, height);
+  //texture(planeTexture);
+  //plane(width, height);
+}
+
+function moveCameraPOne() {
+  print("cameraMov");
+  if (pOneCamCounter == 45) {
+    pOneCameraMov = false;
+    pOne = false;
+    return;
+  }
+  pOneCamAngle += 2;
+  print("cameraAngle" + pOneCamAngle);
+  camera(200, -200, -100, 0, -maxHeight/8, maxHeight/2, 0, 0, 1);
+  pOneCamCounter += 1;
 }
 
 function generateBaseNet() {
-  noStroke();
-  fill(255);
+  stroke(255);
+  //fill(255);
   for (y = -58; y < 60; y += 24) {
     for(x = -70; x < 70; x += 24) {
-      planeTexture.square(x + width/2, y + height/2, 20);
+      //planeTexture.square(x + width/2, y + height/2, 20);
+      push();
+      translate(x, y, maxHeight/2);
+      ambientMaterial(250);
+      box(20, 20, maxHeight);
+      pop();
     }
   }
   //planeTexture.circle(width/2, height/2, 5);    //debug circle
-  noFill();
+  //noFill();
+  pOneCameraMov = true;
 }
 
 function generateBuildingsNet() {
