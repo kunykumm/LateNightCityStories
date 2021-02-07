@@ -42,8 +42,9 @@ var camInfo;
 
 // PHASE III.
 
-var camAngle;
+var defCamSpeed;
 var camSpeed;
+var isPaused;
 
 
 //---                                                                                        ---//
@@ -95,8 +96,9 @@ function setupVariables() {
   pOneCamAngle = 0;
   cam = createCamera();
   cam.camera(0, 0, (height/2) / tan(PI/6), 0, 0, 0, 0, 1, 0)
-  camAngle = 0;
-  camSpeed = 0.01;
+  defCamSpeed = 0.005;
+  camSpeed = 0.005;
+  isPaused = false;
 }
 
 //---                                                                                        ---//
@@ -225,6 +227,25 @@ function makeSumOfOnes() {
 }
 
 //---                                                                                        ---//
+//-------------------------------------- HTML INTERACTION --------------------------------------//
+//---                                                                                        ---//
+
+function changeSpeedPThree(value) {
+  if (pThree) {
+    if (value == 0) {
+      isPaused = !isPaused;
+    }
+    else {
+      camSpeed = camSpeed + 0.001 * value;
+      if (camSpeed < 0.001) camSpeed = 0.001;
+      if (camSpeed > 0.020) camSpeed = 0.020;
+
+    }
+  }
+}
+
+
+//---                                                                                        ---//
 //-------------------------------------------- DRAW --------------------------------------------//
 //---                                                                                        ---//
   
@@ -296,11 +317,11 @@ function generateAroundNet() {
 }
 
 function moveCameraPThree() {
-
-  var vec = createVector(camInfo[0], camInfo[1]).rotate(camAngle * camSpeed);
-  cam.camera(vec.x, vec.y, camInfo[2], camInfo[3], camInfo[4], camInfo[5], camInfo[6], camInfo[7], camInfo[8]);
-
-  camAngle += 1;
-  if (camAngle >= (360 / camSpeed)) camAngle = 0;
+  if (!isPaused) {
+    var vec = createVector(camInfo[0], camInfo[1]).rotate(camSpeed);
+    cam.camera(vec.x, vec.y, camInfo[2], camInfo[3], camInfo[4], camInfo[5], camInfo[6], camInfo[7], camInfo[8]);
+    camInfo[0] = vec.x;
+    camInfo[1] = vec.y;
+  }
 }
 

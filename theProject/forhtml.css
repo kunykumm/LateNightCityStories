@@ -41,6 +41,8 @@ div.coldBtn {
 .cold {color: dodgerblue;}
 .cold:hover {background: rgba(0, 61, 122, 0.466);}
 .submitBtn {color: #b8b8b8;}
+.cntrl {color: gray;}
+.cntrl:hover {background: rgba(59, 59, 59, 0.466);}
 input[type="submit"]:hover {background: black}
 
 div.story {
@@ -80,5 +82,23 @@ div.genButton {
     position: fixed;
     left: 60px;
     top: 262px;
+}
+
+div.slowerButton {
+    position: fixed;
+    left: 60px;
+    top: 322px;
+}
+
+div.pauseButton {
+    position: fixed;
+    left: 110px;
+    top: 322px;
+}
+
+div.fasterButton {
+    position: fixed;
+    left: 186px;
+    top: 322px;
 }
 
