@@ -328,6 +328,7 @@ function generateCityNet() {
     j += 1;
     i = 0; 
   }
+  noStroke();
 }
 
 function getValuesAroundBuilding(x, y) {
@@ -348,14 +349,20 @@ function getValuesAroundBuilding(x, y) {
 }
 
 function generateOutskirtsNet() {
-  
+
+  stroke(255);
+
   // ABOVE
   for (y = -202; y < -58; y += 24) {
     for (x = -214; x < 218; x += 24) {
+
+      var h = calcuteOutskirtsBuildingsHeight(x, y);
+      if (h == 0) continue;
+
       push();
-      translate(x, y, 10);
-      ambientMaterial(250);
-      box(20, 20, 20);
+      translate(x, y, h/2);
+      fill(250, 150);
+      box(20, 20, h);
       pop();
     }
   }
@@ -363,10 +370,14 @@ function generateOutskirtsNet() {
   // MIDDLE LEFT
   for (y = -58; y < 60; y += 24) {
     for (x = -214; x < -70; x += 24) {
+
+      var h = calcuteOutskirtsBuildingsHeight(x, y);
+      if (h == 0) continue;
+
       push();
-      translate(x, y, 10);
-      ambientMaterial(250);
-      box(20, 20, 20);
+      translate(x, y, h/2);
+      fill(250, 150);
+      box(20, 20, h);
       pop();
     }
   }
@@ -374,10 +385,14 @@ function generateOutskirtsNet() {
   // MIDDLE RIGHT
   for (y = -58; y < 60; y += 24) {
     for (x = 74; x < 210; x += 24) {
+
+      var h = calcuteOutskirtsBuildingsHeight(x, y);
+      if (h == 0) continue;
+
       push();
-      translate(x, y, 10);
-      ambientMaterial(250);
-      box(20, 20, 20);
+      translate(x, y, h/2);
+      fill(250, 150);
+      box(20, 20, h);
       pop();
     }
   }
@@ -386,14 +401,30 @@ function generateOutskirtsNet() {
 
   for (y = 62; y < 185; y += 24) {
     for (x = -214; x < 218; x += 24) {
+
+      var h = calcuteOutskirtsBuildingsHeight(x, y);
+      if (h == 0) continue;
+
       push();
-      translate(x, y, 10);
-      ambientMaterial(250);
-      box(20, 20, 20);
+      translate(x, y, h/2);
+      fill(250, 150);
+      box(20, 20, h);
       pop();
     }
   }
 
+  noStroke();
+}
+
+function calcuteOutskirtsBuildingsHeight(x, y) {
+  var h = 0;
+  var d = dist(0, 0, x, y);
+  if (d < 200) {
+    d = d / 1000;
+    var h = abs(sin(y * d) * x / 6 - (cos(x * d) * y / 6));
+    if (h > 20) h = abs(h - 20);
+  }
+  return h;
 }
 
 
