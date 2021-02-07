@@ -266,13 +266,14 @@ function draw() {
 
   if (pThree) {
     moveCameraPThree();
-    generateBaseNet();
+    generateCityNet();
     //generate = false;
   }
 }
 
 function phaseOne() {
-  generateBaseNet();
+  generateCityNet();
+
   pOneCameraMov = true;
 }
 
@@ -294,27 +295,58 @@ function moveCameraPOne() {
   pOneCamCounter += 1;
 }
 
-function generateBaseNet() {
+function generateCityNet() {
+  var i = 0;
+  var j = 0;
   stroke(255);
   for (y = -58; y < 60; y += 24) {
     for(x = -70; x < 70; x += 24) {
+      
+      var height = maxHeight;
+      if (allEmotions[j][i] == '0') {
+        value = getValuesAroundBuilding(i, j);
+        if (value == 0) {
+          var h = random(0, 1);
+          height = height * h / 4;
+          print(height * h);
+        } else {
+          height = height * value / 4;
+        }
+      }
+
       push();
-      translate(x, y, maxHeight/2);
+      translate(x, y, height/2);
       ambientMaterial(250);
-      box(20, 20, maxHeight);
+      box(20, 20, height);
       pop();
+      i += 1;
     }
+    j += 1;
+    i = 0; 
   }
 }
 
-function generateBuildingsNet() {
+function getValuesAroundBuilding(x, y) {
+  var val = 0;
+  if (x - 1 >= 0) {
+    if (allEmotions[y][x - 1] == '1') val += 1;
+  }
+  if (x + 1 < 6) {
+    if (allEmotions[y][x + 1] == '1') val += 1;
+  }
+  if (y - 1 >= 0) {
+    if (allEmotions[y - 1][x] == '1') val += 1;
+  }
+  if (y + 1 < 5) {
+    if (allEmotions[y + 1][x] == '1') val += 1;
+  }
+  return val;
+}
+
+function generateOutskirtsNet() {
   
 }
 
-function generateAroundNet() { 
-
-
-}
 
 function moveCameraPThree() {
   if (!isPaused) {
