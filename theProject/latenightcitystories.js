@@ -37,6 +37,13 @@ var maxHeight;
 var pOneCameraMov;
 var pOneCamCounter;
 var pOneCamAngle;
+var camInfo;
+
+
+// PHASE III.
+
+var camAngle;
+var camSpeed;
 
 
 //---                                                                                        ---//
@@ -88,6 +95,8 @@ function setupVariables() {
   pOneCamAngle = 0;
   cam = createCamera();
   cam.camera(0, 0, (height/2) / tan(PI/6), 0, 0, 0, 0, 1, 0)
+  camAngle = 0;
+  camSpeed = 0.01;
 }
 
 //---                                                                                        ---//
@@ -222,9 +231,10 @@ function makeSumOfOnes() {
 function draw() {
   if (!generate) return;
   
+  canvas.background(50);
+  lights();
+
   if (pOne) {
-    canvas.background(50);
-    lights();
     if (pOneCameraMov) moveCameraPOne();
     phaseOne();
   }
@@ -235,12 +245,14 @@ function draw() {
 
   if (pThree) {
     moveCameraPThree();
+    generateBaseNet();
     //generate = false;
   }
 }
 
 function phaseOne() {
   generateBaseNet();
+  pOneCameraMov = true;
 }
 
 function moveCameraPOne() {
@@ -248,6 +260,9 @@ function moveCameraPOne() {
     pOneCameraMov = false;
     pOne = false;
     pThree = true;
+
+    camInfo = [pOneCamAngle, pOneCamAngle, ((height/2) / tan(PI/6)) - (pOneCamAngle * 3/2), (maxHeight/9) * pOneCamAngle / 200, 0, (maxHeight/2) * pOneCamAngle / 200, 
+               0, 1 - (pOneCamAngle / 200), - (pOneCamAngle / 200)];
     return;
   }
   pOneCamAngle += 2;
@@ -269,7 +284,6 @@ function generateBaseNet() {
       pop();
     }
   }
-  pOneCameraMov = true;
 }
 
 function generateBuildingsNet() {
@@ -283,5 +297,10 @@ function generateAroundNet() {
 
 function moveCameraPThree() {
 
+  var vec = createVector(camInfo[0], camInfo[1]).rotate(camAngle * camSpeed);
+  cam.camera(vec.x, vec.y, camInfo[2], camInfo[3], camInfo[4], camInfo[5], camInfo[6], camInfo[7], camInfo[8]);
+
+  camAngle += 1;
+  if (camAngle >= (360 / camSpeed)) camAngle = 0;
 }
 
