@@ -353,54 +353,24 @@ function generateOutskirtsNet() {
   stroke(255);
 
   // ABOVE
-  for (y = -202; y < -58; y += 24) {
-    for (x = -214; x < 218; x += 24) {
-
-      var h = calcuteOutskirtsBuildingsHeight(x, y);
-      if (h == 0) continue;
-
-      push();
-      translate(x, y, h/2);
-      fill(250, 150);
-      box(20, 20, h);
-      pop();
-    }
-  }
+  generateOutskirtsParts(-214, 218, -202, -58);
 
   // MIDDLE LEFT
-  for (y = -58; y < 60; y += 24) {
-    for (x = -214; x < -70; x += 24) {
-
-      var h = calcuteOutskirtsBuildingsHeight(x, y);
-      if (h == 0) continue;
-
-      push();
-      translate(x, y, h/2);
-      fill(250, 150);
-      box(20, 20, h);
-      pop();
-    }
-  }
+  generateOutskirtsParts(-214, -70, -58, 60);
   
   // MIDDLE RIGHT
-  for (y = -58; y < 60; y += 24) {
-    for (x = 74; x < 210; x += 24) {
-
-      var h = calcuteOutskirtsBuildingsHeight(x, y);
-      if (h == 0) continue;
-
-      push();
-      translate(x, y, h/2);
-      fill(250, 150);
-      box(20, 20, h);
-      pop();
-    }
-  }
+  generateOutskirtsParts(74, 210, -58, 60);
 
   // BELOW
+  generateOutskirtsParts(-214, 218, 62, 185);
 
-  for (y = 62; y < 185; y += 24) {
-    for (x = -214; x < 218; x += 24) {
+  noStroke();
+}
+
+function generateOutskirtsParts(xMin, xMax, yMin, yMax) {
+
+  for (y = yMin; y < yMax; y += 24) {
+    for (x = xMin; x < xMax; x += 24) {
 
       var h = calcuteOutskirtsBuildingsHeight(x, y);
       if (h == 0) continue;
@@ -412,8 +382,6 @@ function generateOutskirtsNet() {
       pop();
     }
   }
-
-  noStroke();
 }
 
 function calcuteOutskirtsBuildingsHeight(x, y) {
