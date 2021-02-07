@@ -234,47 +234,34 @@ function draw() {
   }
 
   if (pThree) {
-    
-    generate = false;
+    moveCameraPThree();
+    //generate = false;
   }
 }
 
 function phaseOne() {
   generateBaseNet();
-  //texture(planeTexture);
-  //plane(width, height);
 }
 
 function moveCameraPOne() {
   if (pOneCamCounter == 100) {
     pOneCameraMov = false;
     pOne = false;
+    pThree = true;
     return;
   }
   pOneCamAngle += 2;
 
-  //camera(pOneCamAngle, -pOneCamAngle, -pOneCamAngle/2, 0, (-maxHeight/8) * pOneCamAngle / 200, (maxHeight/2) * pOneCamAngle / 200, 0, 0, 1);
-  //camera(pOneCamAngle, -pOneCamAngle, -pOneCamAngle/2, 0, 0, 0, 0, 0, 1);
-
-  //cam.lookAt(0, 0, (maxHeight/2) * pOneCamAngle / 200);
-  //cam.setPosition(0, pOneCamAngle * 2, ((height/2) / tan(PI/6)) - (pOneCamAngle * 3/2));
-  //cam.move(pOneCamAngle / 20, 0, 0);
-  cam.camera(-pOneCamAngle, pOneCamAngle, ((height/2) / tan(PI/6)) - (pOneCamAngle * 3/2), 0, 0, 0, 0, 1 - (pOneCamAngle / 200), - (pOneCamAngle / 200));
-  //cam.pan(pOneCamAngle/200);
-  cam.lookAt((-maxHeight/7) * pOneCamAngle / 200, 0, (maxHeight/2) * pOneCamAngle / 200);
-
-  //Final Values of Camera
-  //camera(200, -200, -100, 0, -maxHeight/8, maxHeight/2, 0, 0, 1);
+  cam.camera(pOneCamAngle, pOneCamAngle, ((height/2) / tan(PI/6)) - (pOneCamAngle * 3/2), 0, 0, 0, 0, 1 - (pOneCamAngle / 200), - (pOneCamAngle / 200));
+  cam.lookAt((maxHeight/9) * pOneCamAngle / 200, 0, (maxHeight/2) * pOneCamAngle / 200);
 
   pOneCamCounter += 1;
 }
 
 function generateBaseNet() {
   stroke(255);
-  //fill(255);
   for (y = -58; y < 60; y += 24) {
     for(x = -70; x < 70; x += 24) {
-      //planeTexture.square(x + width/2, y + height/2, 20);
       push();
       translate(x, y, maxHeight/2);
       ambientMaterial(250);
@@ -282,8 +269,6 @@ function generateBaseNet() {
       pop();
     }
   }
-  //planeTexture.circle(width/2, height/2, 5);    //debug circle
-  //noFill();
   pOneCameraMov = true;
 }
 
@@ -293,6 +278,10 @@ function generateBuildingsNet() {
 
 function generateAroundNet() { 
 
+
+}
+
+function moveCameraPThree() {
 
 }
 
