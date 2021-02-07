@@ -248,6 +248,18 @@ function changeColourMood(value) {
 
 }
 
+function saveImage() {
+  if (!pThree) {
+    alert("At first, generate an image.");
+    return;
+  }
+  if (!isPaused) {
+    alert("Pause to save the image.");
+    return;
+  }
+  save(canvas, "late_night_city_stories_" + hour() + "_" + minute() + ".png");
+}
+
 //---                                                                                        ---//
 //-------------------------------------------- DRAW --------------------------------------------//
 //---                                                                                        ---//
@@ -388,6 +400,7 @@ function calcuteOutskirtsBuildingsHeight(x, y) {
   var h = 0;
   var d = dist(0, 0, x, y);
   if (d < 200) {
+    if (noise(x * 0.02, y * 0.02) - 0.02 < 0.4) return h;
     d = d / 1000;
     var h = abs(sin(y * d) * x / 6 - (cos(x * d) * y / 6));
     if (h > 20) h = abs(h - 20);
