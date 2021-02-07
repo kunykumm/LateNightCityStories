@@ -306,9 +306,10 @@ function generateCityNet() {
       if (allEmotions[j][i] == '0') {
         value = getValuesAroundBuilding(i, j);
         if (value == 0) {
-          var h = random(0, 1);
+          //var h = random(0, 1);
+          var h = abs(i * 0.1 + x/100 - (j * 0.1 + y/100));
+          if (h > 0.65) h = abs(h - 1);
           height = height * h / 4;
-          print(height * h);
         } else {
           height = height * value / 4;
         }
