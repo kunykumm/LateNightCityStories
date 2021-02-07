@@ -29,6 +29,7 @@ var pTwo;
 var pThree;
 
 var cam;
+var majorMonoFont;
 
 // PHASE I.
 
@@ -57,6 +58,8 @@ function preload() {
                     14165, 14181];
   var jsonUrl = 'https://api.npoint.io/9e0b7a74e41f4a55ee5e';
   jsonData = loadJSON(jsonUrl /**, processJsonData**/);
+
+  majorMonoFont = loadFont("https://github.com/googlefonts/majormono/blob/master/fonts/MajorMonoDisplay-Regular.ttf");
 }
 
 // function processJsonData() {
@@ -257,7 +260,21 @@ function saveImage() {
     alert("Pause to save the image.");
     return;
   }
-  save(canvas, "late_night_city_stories_" + hour() + "_" + minute() + ".png");
+  createPolaroid();
+}
+
+function createPolaroid() {
+  polaroid = createGraphics(700, 840);
+  polaroid.background(0);
+  polaroid.copy(canvas, 0, 0, 600, 600, 50, 50, 600, 600);
+
+  polaroid.fill(255);
+  polaroid.textFont(majorMonoFont);
+  polaroid.textSize(15);
+  polaroid.textAlign(CENTER);
+  polaroid.text(firstWord + ". " + secondWord + ". " + thirdWord + ".", 350, 720)
+
+  save(polaroid, "late_night_city_stories_" + hour() + "_" + minute() + ".png");
 }
 
 //---                                                                                        ---//
