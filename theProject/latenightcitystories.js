@@ -87,6 +87,7 @@ function setupVariables() {
   pOneCamCounter = 0;
   pOneCamAngle = 0;
   cam = createCamera();
+  cam.camera(0, 0, (height/2) / tan(PI/6), 0, 0, 0, 0, 1, 0)
 }
 
 //---                                                                                        ---//
@@ -255,12 +256,15 @@ function moveCameraPOne() {
   //camera(pOneCamAngle, -pOneCamAngle, -pOneCamAngle/2, 0, (-maxHeight/8) * pOneCamAngle / 200, (maxHeight/2) * pOneCamAngle / 200, 0, 0, 1);
   //camera(pOneCamAngle, -pOneCamAngle, -pOneCamAngle/2, 0, 0, 0, 0, 0, 1);
 
-  cam.lookAt(0, 0, (maxHeight/2) * pOneCamAngle / 200);
-  cam.setPosition(0, pOneCamAngle * 2, ((height/2) / tan(PI/6)) - (pOneCamAngle * 3/2));
+  //cam.lookAt(0, 0, (maxHeight/2) * pOneCamAngle / 200);
+  //cam.setPosition(50, pOneCamAngle * 2, ((height/2) / tan(PI/6)) - (pOneCamAngle * 3/2));
+  cam.camera(-pOneCamAngle, -pOneCamAngle, ((height/2) / tan(PI/6)) - (pOneCamAngle * 3/2), 0, 0, 0, 0, 0, -1);
+  //cam.move(pOneCamAngle, 0, 0);
+  //cam.pan(pOneCamAngle/200);
+  cam.lookAt(0, 0, (maxHeight/3) * pOneCamAngle / 200);
 
   //Final Values of Camera
   //camera(200, -200, -100, 0, -maxHeight/8, maxHeight/2, 0, 0, 1);
-
 
   pOneCamCounter += 1;
 }
