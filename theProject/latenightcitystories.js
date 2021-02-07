@@ -28,6 +28,8 @@ var pOne;
 var pTwo;
 var pThree;
 
+var cam;
+
 // PHASE I.
 
 var planeTexture;
@@ -84,6 +86,7 @@ function setupVariables() {
   pOneCameraMov = false;
   pOneCamCounter = 0;
   pOneCamAngle = 0;
+  cam = createCamera();
 }
 
 //---                                                                                        ---//
@@ -242,15 +245,23 @@ function phaseOne() {
 }
 
 function moveCameraPOne() {
-  print("cameraMov");
-  if (pOneCamCounter == 45) {
+  if (pOneCamCounter == 100) {
     pOneCameraMov = false;
     pOne = false;
     return;
   }
   pOneCamAngle += 2;
-  print("cameraAngle" + pOneCamAngle);
-  camera(200, -200, -100, 0, -maxHeight/8, maxHeight/2, 0, 0, 1);
+
+  //camera(pOneCamAngle, -pOneCamAngle, -pOneCamAngle/2, 0, (-maxHeight/8) * pOneCamAngle / 200, (maxHeight/2) * pOneCamAngle / 200, 0, 0, 1);
+  //camera(pOneCamAngle, -pOneCamAngle, -pOneCamAngle/2, 0, 0, 0, 0, 0, 1);
+
+  cam.lookAt(0, 0, (maxHeight/2) * pOneCamAngle / 200);
+  cam.setPosition(0, pOneCamAngle * 2, ((height/2) / tan(PI/6)) - (pOneCamAngle * 3/2));
+
+  //Final Values of Camera
+  //camera(200, -200, -100, 0, -maxHeight/8, maxHeight/2, 0, 0, 1);
+
+
   pOneCamCounter += 1;
 }
 
