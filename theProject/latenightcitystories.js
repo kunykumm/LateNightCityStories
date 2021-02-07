@@ -244,6 +244,9 @@ function changeSpeedPThree(value) {
   }
 }
 
+function changeColourMood(value) {
+
+}
 
 //---                                                                                        ---//
 //-------------------------------------------- DRAW --------------------------------------------//
@@ -267,13 +270,14 @@ function draw() {
   if (pThree) {
     moveCameraPThree();
     generateCityNet();
+    generateOutskirtsNet()
     //generate = false;
   }
 }
 
 function phaseOne() {
   generateCityNet();
-
+  generateOutskirtsNet()
   pOneCameraMov = true;
 }
 
@@ -306,7 +310,6 @@ function generateCityNet() {
       if (allEmotions[j][i] == '0') {
         value = getValuesAroundBuilding(i, j);
         if (value == 0) {
-          //var h = random(0, 1);
           var h = abs(i * 0.1 + x/100 - (j * 0.1 + y/100));
           if (h > 0.65) h = abs(h - 1);
           height = height * h / 4;
@@ -346,6 +349,51 @@ function getValuesAroundBuilding(x, y) {
 
 function generateOutskirtsNet() {
   
+  // ABOVE
+  for (y = -202; y < -58; y += 24) {
+    for (x = -214; x < 218; x += 24) {
+      push();
+      translate(x, y, 10);
+      ambientMaterial(250);
+      box(20, 20, 20);
+      pop();
+    }
+  }
+
+  // MIDDLE LEFT
+  for (y = -58; y < 60; y += 24) {
+    for (x = -214; x < -70; x += 24) {
+      push();
+      translate(x, y, 10);
+      ambientMaterial(250);
+      box(20, 20, 20);
+      pop();
+    }
+  }
+  
+  // MIDDLE RIGHT
+  for (y = -58; y < 60; y += 24) {
+    for (x = 74; x < 210; x += 24) {
+      push();
+      translate(x, y, 10);
+      ambientMaterial(250);
+      box(20, 20, 20);
+      pop();
+    }
+  }
+
+  // BELOW
+
+  for (y = 62; y < 185; y += 24) {
+    for (x = -214; x < 218; x += 24) {
+      push();
+      translate(x, y, 10);
+      ambientMaterial(250);
+      box(20, 20, 20);
+      pop();
+    }
+  }
+
 }
 
 
