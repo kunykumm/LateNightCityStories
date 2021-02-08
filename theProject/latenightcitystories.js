@@ -33,13 +33,17 @@ var majorMonoFont;
 
 // PHASE I.
 
-var planeTexture;
 var maxHeight;
 var pOneCameraMov;
 var pOneCamCounter;
 var pOneCamAngle;
 var camInfo;
+var planeRoadsTexture;
 
+// PHASE II.
+
+var buildingTexture;
+var isBTGenerated;
 
 // PHASE III.
 
@@ -75,7 +79,7 @@ function setup() {
 function setupWindow() {
   canvas = createCanvas(600, 600, WEBGL);
   canvas.position(260, 50);
-  canvas.background(50);
+  canvas.background(30);
 }
 
 function setupVariables() {
@@ -92,7 +96,6 @@ function setupVariables() {
   xShift = random(0, 100);
   yShift = random(0, 100);
   sumOfOnes = 0;
-  planeTexture = createGraphics(width, height);
   maxHeight = 120;
   pOneCameraMov = false;
   pOneCamCounter = 0;
@@ -102,6 +105,9 @@ function setupVariables() {
   defCamSpeed = 0.005;
   camSpeed = 0.005;
   isPaused = false;
+  planeRoadsTexture = createGraphics(width, height);
+  buildingTexture = createGraphics(maxHeight, maxHeight);
+  isBTGenerated = false;
 }
 
 //---                                                                                        ---//
@@ -284,37 +290,56 @@ function createPolaroid() {
 function draw() {
   if (!generate) return;
   
-  canvas.background(50);
+  canvas.background(0);
   lights();
+
+  if (!isBTGenerated) {
+    createGradientTexture();
+    isBTGenerated = true;
+  }
 
   if (pOne) {
     if (pOneCameraMov) moveCameraPOne();
     phaseOne();
   }
+  if (pTwo || pThree) {
 
-  if (pTwo) {
-
-  }
-
-  if (pThree) {
-    moveCameraPThree();
+    if (pTwo) {
+      phaseTwo();
+    }
+  
+    if (pThree) {
+      moveCameraPThree();
+      //generate = false;
+    }
     generateCityNet();
     generateOutskirtsNet()
-    //generate = false;
   }
+
+  push();
+  ambientMaterial(10);
+  plane(width, height);
+  pop();
 }
 
 function phaseOne() {
+  //planeRoadsTexture = createGraphics(width, height);
+  //planeRoadsTexture.background(0);
   generateCityNet();
   generateOutskirtsNet()
   pOneCameraMov = true;
+}
+
+function phaseTwo() {
+  pTwo = false;
+  pThree = true;
 }
 
 function moveCameraPOne() {
   if (pOneCamCounter == 100) {
     pOneCameraMov = false;
     pOne = false;
-    pThree = true;
+    pTwo = true;
 
     camInfo = [pOneCamAngle, pOneCamAngle, ((height/2) / tan(PI/6)) - (pOneCamAngle * 3/2), (maxHeight/9) * pOneCamAngle / 200, 0, (maxHeight/2) * pOneCamAngle / 200, 
                0, 1 - (pOneCamAngle / 200), - (pOneCamAngle / 200)];
@@ -331,7 +356,7 @@ function moveCameraPOne() {
 function generateCityNet() {
   var i = 0;
   var j = 0;
-  stroke(255);
+  stroke(60);
   for (y = -58; y < 60; y += 24) {
     for(x = -70; x < 70; x += 24) {
       
@@ -349,9 +374,12 @@ function generateCityNet() {
 
       push();
       translate(x, y, height/2);
-      ambientMaterial(250);
+      ambientMaterial(40);
       box(20, 20, height);
       pop();
+
+      createLightFog(x, y, i, j);
+
       i += 1;
     }
     j += 1;
@@ -377,9 +405,31 @@ function getValuesAroundBuilding(x, y) {
   return val;
 }
 
+function createLightFog(x, y, localX, localY) {
+  if (localY % 2 == 0) {
+    if (localX % 2 == 0) {
+      push();
+      //noStroke();
+      translate(x + 12, y + 12, 15);
+      rotateX(-90);
+      texture(buildingTexture);
+      plane(30, 30);
+      pop();
+    } else {
+
+    }
+  } else {
+    if (localX % 2 == 0) {
+
+    } else {
+      
+    }
+  }
+}
+
 function generateOutskirtsNet() {
 
-  stroke(255);
+  stroke(50);
 
   // ABOVE
   generateOutskirtsParts(-214, 218, -202, -58);
@@ -406,7 +456,7 @@ function generateOutskirtsParts(xMin, xMax, yMin, yMax) {
 
       push();
       translate(x, y, h/2);
-      fill(250, 150);
+      fill(50, 150);
       box(20, 20, h);
       pop();
     }
@@ -423,6 +473,21 @@ function calcuteOutskirtsBuildingsHeight(x, y) {
     if (h > 20) h = abs(h - 20);
   }
   return h;
+}
+
+function generateRoadsPlane() {
+  
+}
+
+function createGradientTexture() {
+  var beginning = maxHeight * 2/3;
+  for (i = beginning; i < maxHeight; ++i) {
+    for (j = 0; j < maxHeight; ++j) {
+      var res = (i - (2/3 * maxHeight)) / (maxHeight * 1/3) * 255 + random(-20, 20);
+      buildingTexture.stroke(min(res, 255), 125);
+      buildingTexture.point(j, i);
+    }
+  }
 }
 
 
