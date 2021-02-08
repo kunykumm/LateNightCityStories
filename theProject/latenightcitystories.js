@@ -107,6 +107,7 @@ function setupVariables() {
   isPaused = false;
   planeRoadsTexture = createGraphics(width, height);
   buildingTexture = createGraphics(maxHeight, maxHeight);
+  buildingTexture.background(0, 0);
   isBTGenerated = false;
 }
 
@@ -294,7 +295,10 @@ function draw() {
   lights();
 
   if (!isBTGenerated) {
-    createGradientTexture();
+    createGroundTexture();
+    //createGradientTexture();
+    texture(planeRoadsTexture);
+    plane(600, 600);
     isBTGenerated = true;
   }
 
@@ -317,14 +321,14 @@ function draw() {
   }
 
   push();
-  ambientMaterial(10);
-  plane(width, height);
+  // ambientMaterial(10);
+  // plane(width, height);
+  texture(planeRoadsTexture);
+  plane(450, 450);
   pop();
 }
 
 function phaseOne() {
-  //planeRoadsTexture = createGraphics(width, height);
-  //planeRoadsTexture.background(0);
   generateCityNet();
   generateOutskirtsNet()
   pOneCameraMov = true;
@@ -378,7 +382,7 @@ function generateCityNet() {
       box(20, 20, height);
       pop();
 
-      createLightFog(x, y, i, j);
+      //createLightFog(x, y, i, j);
 
       i += 1;
     }
@@ -408,13 +412,23 @@ function getValuesAroundBuilding(x, y) {
 function createLightFog(x, y, localX, localY) {
   if (localY % 2 == 0) {
     if (localX % 2 == 0) {
-      push();
-      //noStroke();
-      translate(x + 12, y + 12, 15);
-      rotateX(-90);
-      texture(buildingTexture);
-      plane(30, 30);
-      pop();
+      // push();
+      // noStroke();
+      // translate(x + 12, y + 12, 15);
+      // rotateX(-1.57079633);
+      // texture(buildingTexture);
+      // plane(30, 30);
+      // pop();
+
+      for (i = y - 15; i < y + 15; ++i) {
+        push();
+        stroke(255);
+        beginShape();
+        vertex(x, i, 0);
+        vertex(x, i, random(15, 35));
+        endShape();
+      }
+
     } else {
 
     }
@@ -475,20 +489,31 @@ function calcuteOutskirtsBuildingsHeight(x, y) {
   return h;
 }
 
-function generateRoadsPlane() {
-  
+function createGroundTexture() {
+  for(y = 0; y < height; y++){
+    for(x = 0; x < width; x++){
+      var d = dist(x, y, width/2, height/2);
+      //planeRoadsTexture.stroke(255 - map(d, 0, width/2 * height/2, 0, width/2 * height/2));
+      planeRoadsTexture.stroke(255 - d);
+      planeRoadsTexture.point(x, y);
+    }
+  } 
 }
 
-function createGradientTexture() {
-  var beginning = maxHeight * 2/3;
-  for (i = beginning; i < maxHeight; ++i) {
-    for (j = 0; j < maxHeight; ++j) {
-      var res = (i - (2/3 * maxHeight)) / (maxHeight * 1/3) * 255 + random(-20, 20);
-      buildingTexture.stroke(min(res, 255), 125);
-      buildingTexture.point(j, i);
-    }
-  }
-}
+// function createGradientTexture() {
+//   var beginning = maxHeight * 1/3;
+//   for (i = beginning; i < maxHeight; ++i) {
+//     for (j = 0; j < maxHeight; ++j) {
+//       if (i < beginning) {
+//         buildingTexture.stroke(0, 0);
+//       } else {
+//         var res = (i - (1/3 * maxHeight)) / (maxHeight * 2/3) * 255 + random(-20, 20);
+//         buildingTexture.stroke(255, min(res, 255));
+//       }
+//       buildingTexture.point(j, i);
+//     }
+//   }
+// }
 
 
 function moveCameraPThree() {
