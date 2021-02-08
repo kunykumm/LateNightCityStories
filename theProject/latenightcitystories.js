@@ -49,7 +49,6 @@ var planeRoadsTexture;
 
 // PHASE II.
 
-var buildingTexture;
 var isBTGenerated;
 var pTwoCounter;
 
@@ -114,9 +113,7 @@ function setupVariables() {
   defCamSpeed = 0.005;
   camSpeed = 0.005;
   isPaused = false;
-  planeRoadsTexture = createGraphics(width, height);
-  buildingTexture = createGraphics(maxHeight, maxHeight);
-  buildingTexture.background(0, 0);
+  planeRoadsTexture = createGraphics(150, 150);
   isBTGenerated = false;
   pOneCameraSlide = true;
   pTwoCounter = 0;
@@ -359,8 +356,8 @@ function draw() {
 
   //fill(255, 150, 0, 50);
   //sphere(80);
-  ambientMaterial(10);
-  plane(450, 450);
+  texture(planeRoadsTexture);
+  plane(600, 600);
 
   if (pOneCameraSlide) {
     slideCameraFade();
@@ -470,7 +467,7 @@ function getValuesAroundBuilding(x, y) {
 
 function generateOutskirtsNet() {
 
-  stroke(50);
+  //stroke(50);
 
   // ABOVE
   generateOutskirtsParts(-214, 218, -202, -58);
@@ -495,6 +492,17 @@ function generateOutskirtsParts(xMin, xMax, yMin, yMax) {
       var h = calcuteOutskirtsBuildingsHeight(x, y);
       if (h == 0) continue;
 
+      stroke(50);
+      if ((pTwo && pTwoCounter >= 60) || pThree) {
+        var d = dist(0, 0, x, y);
+        var strokeColour = [pickedColour[0] * ((width/2.5 - d) / (width/2.5)),
+                            pickedColour[1] * ((width/2.5 - d) / (width/2.5)),
+                            pickedColour[2] * ((width/2.5 - d) / (width/2.5))]
+
+        stroke(strokeColour[0], strokeColour[1], strokeColour[2]);
+        //print(strokeColour);
+      }
+
       push();
       translate(x, y, h/2);
       fill(50, 150);
@@ -517,11 +525,16 @@ function calcuteOutskirtsBuildingsHeight(x, y) {
 }
 
 function createGroundTexture() {
-  for(y = 0; y < height; y++){
-    for(x = 0; x < width; x++){
-      var d = dist(x, y, width/2, height/2);
-      planeRoadsTexture.stroke(255 - d - 20);
-      planeRoadsTexture.point(x, y);
+  planeRoadsTexture.noStroke();
+  planeRoadsTexture.background(0);
+  for(y = 5; y < 150 - 5; y += 10){
+    for(x = 5; x < 150 - 5; x += 10){
+      var d = dist(x, y, 150 / 2, 150 / 2);
+      planeRoadsTexture.fill(pickedColour[0], 
+                             pickedColour[1],
+                             pickedColour[2],
+                             ((100 - d) / 100) * 255 - 137);
+      planeRoadsTexture.square(x, y, 10);
     }
   } 
 }
