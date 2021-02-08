@@ -57,6 +57,7 @@ var pTwoCounter;
 var defCamSpeed;
 var camSpeed;
 var isPaused;
+var planeTextAngle;
 
 
 //---                                                                                        ---//
@@ -121,6 +122,7 @@ function setupVariables() {
   warmColour = [252, 144, 3];
   coldColour = [3, 75, 252];
   pickedColour = [];
+  planeTextAngle = 0;
 }
 
 //---                                                                                        ---//
@@ -350,6 +352,7 @@ function draw() {
       pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
       pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
       moveCameraPThree();
+      showInfoFacingCamera();
     }
   }
 
@@ -420,7 +423,7 @@ function generateCityNet() {
   var i = 0;
   var j = 0;
   stroke(60)
-  if ((pTwo && pTwoCounter >= 60) || pThree) {
+  if ((pTwo && pTwoCounter >= 80) || pThree) {
     stroke(pickedColour[0], pickedColour[1], pickedColour[2]);
   }
   for (y = -58; y < 60; y += 24) {
@@ -497,7 +500,7 @@ function generateOutskirtsParts(xMin, xMax, yMin, yMax) {
       if (h == 0) continue;
 
       stroke(50);
-      if ((pTwo && pTwoCounter >= 60) || pThree) {
+      if ((pTwo && pTwoCounter >= 80) || pThree) {
         var d = dist(0, 0, x, y);
         var strokeColour = [pickedColour[0] * ((width/2.5 - d) / (width/2.5)),
                             pickedColour[1] * ((width/2.5 - d) / (width/2.5)),
@@ -551,6 +554,31 @@ function moveCameraPThree() {
     cam.camera(vec.x, vec.y, camInfo[2], camInfo[3], camInfo[4], camInfo[5], camInfo[6], camInfo[7], camInfo[8]);
     camInfo[0] = vec.x;
     camInfo[1] = vec.y;
+  }
+}
+
+function showInfoFacingCamera() {
+  if (!isPaused) {
+    push();
+    //from camera to origin (O - C)
+    var vec = createVector(camInfo[3] - camInfo[0], camInfo[4] - camInfo[1], camInfo[5] - camInfo[2]).normalize();
+    var camVec = createVector(camInfo[0], camInfo[1]).normalize();
+    var planeVec = createVector(vec.x, vec.y);
+
+    var angle = degrees(planeVec.angleBetween(camVec));
+    print("angle: " + angle);
+    planeTextAngle -= angle;
+    if (abs(planeTextAngle) > 360) {
+      planeTextAngle += 360;
+    }
+    print(planeTextAngle);
+
+    stroke(255);
+    noFill();
+    translate(camInfo[0] + vec.x * 100, camInfo[1] + vec.y * 100, camInfo[2] + vec.z * 100);
+    rotate(planeTextAngle);
+    plane(100, 100);
+    pop();
   }
 }
 
