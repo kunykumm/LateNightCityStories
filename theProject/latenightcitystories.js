@@ -35,6 +35,8 @@ var majorMonoFont;
 
 var maxHeight;
 var pOneCameraMov;
+var pOneCameraSlide;
+var pOneSlideCounter;
 var pOneCamCounter;
 var pOneCamAngle;
 var camInfo;
@@ -99,9 +101,10 @@ function setupVariables() {
   maxHeight = 120;
   pOneCameraMov = false;
   pOneCamCounter = 0;
+  pOneSlideCounter = 0;
   pOneCamAngle = 0;
   cam = createCamera();
-  cam.camera(0, 0, (height/2) / tan(PI/6), 0, 0, 0, 0, 1, 0)
+  cam.camera(-200, -200, (height/2) / tan(PI/6), 0, 0, 0, 0, 1, 0);
   defCamSpeed = 0.005;
   camSpeed = 0.005;
   isPaused = false;
@@ -109,6 +112,7 @@ function setupVariables() {
   buildingTexture = createGraphics(maxHeight, maxHeight);
   buildingTexture.background(0, 0);
   isBTGenerated = false;
+  pOneCameraSlide = true;
 }
 
 //---                                                                                        ---//
@@ -293,16 +297,17 @@ function draw() {
   
   canvas.background(0);
   lights();
+  pointLight(255, 150, 0, 0, 0, maxHeight / 6);
+  pointLight(255, 150, 0, 0, 0, maxHeight / 6);
+  pointLight(255, 150, 0, 0, 0, maxHeight / 6);
 
   if (!isBTGenerated) {
     createGroundTexture();
-    //createGradientTexture();
-    texture(planeRoadsTexture);
-    plane(600, 600);
     isBTGenerated = true;
   }
 
   if (pOne) {
+    if (pOneCameraSlide) slideCameraAboveCity();
     if (pOneCameraMov) moveCameraPOne();
     phaseOne();
   }
@@ -320,23 +325,47 @@ function draw() {
     generateOutskirtsNet()
   }
 
-  push();
-  // ambientMaterial(10);
-  // plane(width, height);
-  texture(planeRoadsTexture);
+  //fill(255, 150, 0, 50);
+  //sphere(80);
+  ambientMaterial(10);
   plane(450, 450);
-  pop();
+
+  if (pOneCameraSlide) {
+    slideCameraFade();
+  }
 }
 
 function phaseOne() {
   generateCityNet();
   generateOutskirtsNet()
-  pOneCameraMov = true;
 }
 
 function phaseTwo() {
   pTwo = false;
   pThree = true;
+}
+
+function slideCameraAboveCity() {
+  if (pOneSlideCounter == 300) {
+    pOneCameraSlide = false;
+    pOneCameraMov = true;
+    cam.camera(0, 0, (height/2) / tan(PI/6), 0, 0, 0, 0, 1, 0);
+    return;
+  } else {
+    var cur = -200 + pOneSlideCounter * 200 / 300;
+    cam.camera(cur, cur, (height/2) / tan(PI/6), cur, cur, 0, 0, 1, 0);
+    pOneSlideCounter += 1;
+  }
+}
+
+function slideCameraFade() {
+  var val = 255 - (pOneSlideCounter * 255 / 300);
+  fill(0, val);
+  push();
+  noStroke();
+  translate(0, 0, maxHeight + 20);
+  plane(width, height);
+  pop();
 }
 
 function moveCameraPOne() {
@@ -382,8 +411,6 @@ function generateCityNet() {
       box(20, 20, height);
       pop();
 
-      //createLightFog(x, y, i, j);
-
       i += 1;
     }
     j += 1;
@@ -407,38 +434,6 @@ function getValuesAroundBuilding(x, y) {
     if (allEmotions[y + 1][x] == '1') val += 1;
   }
   return val;
-}
-
-function createLightFog(x, y, localX, localY) {
-  if (localY % 2 == 0) {
-    if (localX % 2 == 0) {
-      // push();
-      // noStroke();
-      // translate(x + 12, y + 12, 15);
-      // rotateX(-1.57079633);
-      // texture(buildingTexture);
-      // plane(30, 30);
-      // pop();
-
-      for (i = y - 15; i < y + 15; ++i) {
-        push();
-        stroke(255);
-        beginShape();
-        vertex(x, i, 0);
-        vertex(x, i, random(15, 35));
-        endShape();
-      }
-
-    } else {
-
-    }
-  } else {
-    if (localX % 2 == 0) {
-
-    } else {
-      
-    }
-  }
 }
 
 function generateOutskirtsNet() {
@@ -493,32 +488,15 @@ function createGroundTexture() {
   for(y = 0; y < height; y++){
     for(x = 0; x < width; x++){
       var d = dist(x, y, width/2, height/2);
-      //planeRoadsTexture.stroke(255 - map(d, 0, width/2 * height/2, 0, width/2 * height/2));
-      planeRoadsTexture.stroke(255 - d);
+      planeRoadsTexture.stroke(255 - d - 20);
       planeRoadsTexture.point(x, y);
     }
   } 
 }
 
-// function createGradientTexture() {
-//   var beginning = maxHeight * 1/3;
-//   for (i = beginning; i < maxHeight; ++i) {
-//     for (j = 0; j < maxHeight; ++j) {
-//       if (i < beginning) {
-//         buildingTexture.stroke(0, 0);
-//       } else {
-//         var res = (i - (1/3 * maxHeight)) / (maxHeight * 2/3) * 255 + random(-20, 20);
-//         buildingTexture.stroke(255, min(res, 255));
-//       }
-//       buildingTexture.point(j, i);
-//     }
-//   }
-// }
-
-
 function moveCameraPThree() {
   if (!isPaused) {
-    var vec = createVector(camInfo[0], camInfo[1]).rotate(camSpeed);
+    var vec = createVector(camInfo[0], camInfo[1]).rotate(-camSpeed);
     cam.camera(vec.x, vec.y, camInfo[2], camInfo[3], camInfo[4], camInfo[5], camInfo[6], camInfo[7], camInfo[8]);
     camInfo[0] = vec.x;
     camInfo[1] = vec.y;
