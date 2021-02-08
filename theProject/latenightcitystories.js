@@ -31,6 +31,11 @@ var pThree;
 var cam;
 var majorMonoFont;
 
+var moodColour;
+var warmColour;
+var coldColour;
+var pickedColour;
+
 // PHASE I.
 
 var maxHeight;
@@ -46,6 +51,7 @@ var planeRoadsTexture;
 
 var buildingTexture;
 var isBTGenerated;
+var pTwoCounter;
 
 // PHASE III.
 
@@ -113,6 +119,11 @@ function setupVariables() {
   buildingTexture.background(0, 0);
   isBTGenerated = false;
   pOneCameraSlide = true;
+  pTwoCounter = 0;
+  moodColour = 0;
+  warmColour = [252, 144, 3];
+  coldColour = [3, 75, 252];
+  pickedColour = [];
 }
 
 //---                                                                                        ---//
@@ -137,6 +148,11 @@ function getWords() {
   thirdWord = document.forms["inputForm"]["thirdW"].value;
   if (thirdWord == "") {
     alert("The epilogue is missing.");
+    return;
+  }
+
+  if (moodColour == 0) {
+    alert("Choose mood of your city.");
     return;
   }
 
@@ -259,7 +275,13 @@ function changeSpeedPThree(value) {
 }
 
 function changeColourMood(value) {
-
+  moodColour = value;
+  if (value == -1) {
+    pickedColour = coldColour;
+  } 
+  if (value == 1) {
+    pickedColour = warmColour;
+  }
 }
 
 function saveImage() {
@@ -297,9 +319,6 @@ function draw() {
   
   canvas.background(0);
   lights();
-  pointLight(255, 150, 0, 0, 0, maxHeight / 6);
-  pointLight(255, 150, 0, 0, 0, maxHeight / 6);
-  pointLight(255, 150, 0, 0, 0, maxHeight / 6);
 
   if (!isBTGenerated) {
     createGroundTexture();
@@ -309,21 +328,34 @@ function draw() {
   if (pOne) {
     if (pOneCameraSlide) slideCameraAboveCity();
     if (pOneCameraMov) moveCameraPOne();
-    phaseOne();
   }
   if (pTwo || pThree) {
 
     if (pTwo) {
+      if (pTwoCounter >= 20) {
+        pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
+      }
+      if (pTwoCounter >= 40) {
+        pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
+      }
+      if (pTwoCounter >= 60) {
+        pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
+      }
       phaseTwo();
+      pTwoCounter += 1;
     }
   
     if (pThree) {
+      pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
+      pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
+      pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
       moveCameraPThree();
-      //generate = false;
     }
-    generateCityNet();
-    generateOutskirtsNet()
   }
+
+  // THE CITY
+  generateCityNet();
+  generateOutskirtsNet()
 
   //fill(255, 150, 0, 50);
   //sphere(80);
@@ -335,14 +367,11 @@ function draw() {
   }
 }
 
-function phaseOne() {
-  generateCityNet();
-  generateOutskirtsNet()
-}
-
 function phaseTwo() {
-  pTwo = false;
-  pThree = true;
+  if (pTwoCounter >= 80) {
+    pTwo = false;
+    pThree = true;
+  }
 }
 
 function slideCameraAboveCity() {
@@ -389,7 +418,10 @@ function moveCameraPOne() {
 function generateCityNet() {
   var i = 0;
   var j = 0;
-  stroke(60);
+  stroke(60)
+  if ((pTwo && pTwoCounter >= 60) || pThree) {
+    stroke(pickedColour[0], pickedColour[1], pickedColour[2]);
+  }
   for (y = -58; y < 60; y += 24) {
     for(x = -70; x < 70; x += 24) {
       
