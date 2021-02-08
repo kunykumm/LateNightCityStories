@@ -331,12 +331,15 @@ function draw() {
     if (pTwo) {
       if (pTwoCounter >= 20) {
         pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
+        createGroundTexture();
       }
       if (pTwoCounter >= 40) {
         pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
+        createGroundTexture();
       }
       if (pTwoCounter >= 60) {
         pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
+        createGroundTexture();
       }
       phaseTwo();
       pTwoCounter += 1;
@@ -368,6 +371,7 @@ function phaseTwo() {
   if (pTwoCounter >= 80) {
     pTwo = false;
     pThree = true;
+    createGroundTexture();
   }
 }
 
@@ -525,14 +529,16 @@ function calcuteOutskirtsBuildingsHeight(x, y) {
 }
 
 function createGroundTexture() {
+  var ratio = pTwoCounter / 20;
   planeRoadsTexture.noStroke();
   planeRoadsTexture.background(0);
   for(y = 5; y < 150 - 5; y += 10){
     for(x = 5; x < 150 - 5; x += 10){
       var d = dist(x, y, 150 / 2, 150 / 2);
-      planeRoadsTexture.fill(pickedColour[0], 
-                             pickedColour[1],
-                             pickedColour[2],
+      var newCol = [255 - (((255 - pickedColour[0]) * ratio) / 4), 255 - (((255 - pickedColour[1]) * ratio) / 4), 255 - (((255 - pickedColour[2]) * ratio) / 4)]
+      planeRoadsTexture.fill(newCol[0], 
+                             newCol[1],
+                             newCol[2],
                              ((100 - d) / 100) * 255 - 137);
       planeRoadsTexture.square(x, y, 10);
     }
