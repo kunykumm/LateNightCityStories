@@ -626,16 +626,16 @@ function drawBuildingsNetInfo() {
   for (j = 0; j < 5; ++j) {
     for (i = 0; i < 6; ++i) {
       if (allEmotions[j][i] == '1') {
-        planeTextTexture.fill(180);
+        planeTextTexture.fill(180 + random(-30, 30));
       } else {
-        planeTextTexture.fill(35);
+        planeTextTexture.fill(35 + random(-10, 10));
       }
       planeTextTexture.square(10 + i * 6, 10 + j * 6, 3);
 
       var v = (i + j * 6);
       if (v % 10 == 0 && v != 0) {
         push();
-        planeTextTexture.fill(200);
+        planeTextTexture.fill(200 + random(-30, 30));
         planeTextTexture.rect(10 - 2 + i * 6, 10 + 1 + j * 6, 1, 1);
         pop();
       }
@@ -646,7 +646,7 @@ function drawBuildingsNetInfo() {
 function drawInfoEmotions() {
   var curF = int(frameCount / 20) % 10;
   push();
-  planeTextTexture.fill(125);
+  planeTextTexture.fill(125 + random(-15, 15));
   planeTextTexture.textFont("Courier New");
   planeTextTexture.textSize(5);
   planeTextTexture.textAlign(LEFT);
@@ -665,7 +665,7 @@ function drawCoordinates() {
   }
 
   push();
-  planeTextTexture.fill(125);
+  planeTextTexture.fill(125 + random(-15, 15));
   planeTextTexture.textFont("Courier New");
   planeTextTexture.textSize(6);
   planeTextTexture.textAlign(RIGHT);
