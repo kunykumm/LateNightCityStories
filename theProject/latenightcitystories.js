@@ -22,6 +22,9 @@ var secondEmotions;
 var thirdEmotions;
 var allEmotions;
 var sumOfOnes;
+var averageEmos;
+var emotionsStrings;
+var fancySymbols;
 
 var generate;
 var pOne;
@@ -59,6 +62,9 @@ var camSpeed;
 var isPaused;
 var planeTextAngle;
 var planeTextTexture;
+var fW;
+var sW;
+var tW;
 
 
 //---                                                                                        ---//
@@ -125,6 +131,12 @@ function setupVariables() {
   pickedColour = [];
   planeTextAngle = 0;
   planeTextTexture = createGraphics(112, 112);
+  averageEmos = [];
+  emotionsStrings = ["Positive", "Negative", "Anger", "Anticipation", "Disgust", "Fear", "Joy", "Sadness", "Surprise", "Trust"];
+  fancySymbols = ["°", "'", "''", "/", ",", ".", ";", ":"];
+  fW = "";
+  sW = "";
+  tW = "";
 }
 
 //---                                                                                        ---//
@@ -161,6 +173,7 @@ function getWords() {
   fillAllEmotions();
   print(allEmotions);
   makeSumOfOnes();
+  averageEmotions();
 
   generate = true;
   pOne = true;
@@ -254,6 +267,17 @@ function makeSumOfOnes() {
     if (firstEmotions[i] == '1') sumOfOnes++;
     if (secondEmotions[i] == '1') sumOfOnes++;
     if (thirdEmotions[i] == '1') sumOfOnes++;
+  }
+}
+
+function averageEmotions() {
+  var count = 0;
+  for (i = 0; i < 10; ++i) {
+    count = 0;
+    if (firstEmotions[i] == '1') count++;
+    if (secondEmotions[i] == '1') count++;
+    if (thirdEmotions[i] == '1') count++;
+    averageEmos.push(count / sumOfOnes);
   }
 }
 
@@ -578,31 +602,91 @@ function showInfoFacingCamera() {
   var vecDir = createVector(camInfo[3] - camInfo[0], camInfo[4] - camInfo[1], camInfo[5] - camInfo[2]).normalize();
 
   push();
-  stroke(255);
-  //texture(planeTextTexture);
-  noFill();
-  translate(camInfo[0] + vecDir.x * 100, camInfo[1] + vecDir.y * 100, camInfo[2] + vecDir.z * 100);
+  //stroke(255);
+  texture(planeTextTexture);
+  translate(camInfo[0] + vecDir.x * 700, camInfo[1] + vecDir.y * 700, camInfo[2] + vecDir.z * 700);
   rotateZ(planeTextAngle - PI/4);
   rotateX(-58 * PI/180);
-  plane(112, 112);
+  plane(800, 800);
   pop();
 
 }
 
 function createPlaneCameraTexture() {
-  planeTextTexture = createGraphics(112, 112);
+  planeTextTexture = createGraphics(224, 224);
   planeTextTexture.clear();
   planeTextTexture.noStroke();
   planeTextTexture.background(0, 0);
+  drawBuildingsNetInfo();
+  drawInfoEmotions();
+  drawCoordinates();
+}
+
+function drawBuildingsNetInfo() {
   for (j = 0; j < 5; ++j) {
     for (i = 0; i < 6; ++i) {
       if (allEmotions[j][i] == '1') {
-        planeTextTexture.fill(255);
+        planeTextTexture.fill(180);
       } else {
-        planeTextTexture.fill(50);
+        planeTextTexture.fill(35);
       }
-      planeTextTexture.square(10 + i * 5, 10 + j * 5, 3);
+      planeTextTexture.square(10 + i * 6, 10 + j * 6, 3);
+
+      var v = (i + j * 6);
+      if (v % 10 == 0 && v != 0) {
+        push();
+        planeTextTexture.fill(200);
+        planeTextTexture.rect(10 - 2 + i * 6, 10 + 1 + j * 6, 1, 1);
+        pop();
+      }
     }
   }
+}
+
+function drawInfoEmotions() {
+  var curF = int(frameCount / 20) % 10;
+  push();
+  planeTextTexture.fill(125);
+  planeTextTexture.textFont("Courier New");
+  planeTextTexture.textSize(5);
+  planeTextTexture.textAlign(LEFT);
+  var cur = int(averageEmos[curF] * 100);
+  planeTextTexture.text(cur + "% " + emotionsStrings[curF], 10, 43);   //+ i * 5
+  pop();
+}
+
+function drawCoordinates() {
+  var curF = int(frameCount / 10) % 10;
+
+  if (curF == 0) {
+    fW = generateWordCoordinates(firstWord);
+    sW = generateWordCoordinates(secondWord);
+    tW = generateWordCoordinates(thirdWord);
+  }
+
+  push();
+  planeTextTexture.fill(125);
+  planeTextTexture.textFont("Courier New");
+  planeTextTexture.textSize(6);
+  planeTextTexture.textAlign(RIGHT);
+  planeTextTexture.text(fW, 214, 15);
+  planeTextTexture.text(sW, 214, 24);
+  planeTextTexture.text(tW, 214, 33);
+  pop();
+}
+
+function generateWordCoordinates(originalW) {
+  newW = "";
+  for (i = 0; i < originalW.length; ++i) {
+    var val = random(0, 10);
+    if (val < 5) {
+      newW += originalW[i];
+    } else {
+      newW += unchar(originalW[i]);
+    }
+    newW += random(fancySymbols);
+    newW += " "; 
+  }
+  return newW;
 }
 
