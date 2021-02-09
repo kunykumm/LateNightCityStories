@@ -39,6 +39,10 @@ var warmColour;
 var coldColour;
 var pickedColour;
 
+var polaroidColour;
+var polaroidText;
+var isPolaroidPicked;
+
 // PHASE I.
 
 var maxHeight;
@@ -137,6 +141,7 @@ function setupVariables() {
   fW = "";
   sW = "";
   tW = "";
+  isPolaroidPicked = 0;
 }
 
 //---                                                                                        ---//
@@ -286,6 +291,10 @@ function averageEmotions() {
 //---                                                                                        ---//
 
 function changeSpeedPThree(value) {
+  if (!pThree) {
+    alert("Wait for the image to generate.");
+    return;
+  }
   if (pThree) {
     if (value == 0) {
       isPaused = !isPaused;
@@ -309,6 +318,18 @@ function changeColourMood(value) {
   }
 }
 
+function pickPolaroidCol(value) {
+  isPolaroidPicked = value;
+  if (value == -1) {
+    polaroidColour = 255;
+    polaroidText = 0;
+  } 
+  if (value == 1) {
+    polaroidColour = 0;
+    polaroidText = 255;
+  }
+}
+
 function saveImage() {
   if (!pThree) {
     alert("At first, generate an image.");
@@ -318,15 +339,23 @@ function saveImage() {
     alert("Pause to save the image.");
     return;
   }
+  if (isPolaroidPicked == 0) {
+    alert("Pick polaroid colour.");
+    return;
+  }
   createPolaroid();
 }
 
 function createPolaroid() {
   polaroid = createGraphics(700, 840);
-  polaroid.background(0);
+  polaroid.background(polaroidColour);
+  push();
+  polaroid.fill(0);
+  polaroid.rect(50, 50, 600, 600);
+  pop();
   polaroid.copy(canvas, 0, 0, 600, 600, 50, 50, 600, 600);
 
-  polaroid.fill(255);
+  polaroid.fill(polaroidText);
   polaroid.textFont("Courier New");
   polaroid.textSize(18);
   polaroid.textAlign(CENTER);
