@@ -559,26 +559,23 @@ function moveCameraPThree() {
 
 function showInfoFacingCamera() {
   if (!isPaused) {
-    push();
-    //from camera to origin (O - C)
-    var vec = createVector(camInfo[3] - camInfo[0], camInfo[4] - camInfo[1], camInfo[5] - camInfo[2]).normalize();
-    var camVec = createVector(camInfo[0], camInfo[1]).normalize();
-    var planeVec = createVector(vec.x, vec.y);
-
-    var angle = degrees(planeVec.angleBetween(camVec));
-    print("angle: " + angle);
-    planeTextAngle -= angle;
-    if (abs(planeTextAngle) > 360) {
-      planeTextAngle += 360;
+    planeTextAngle -= camSpeed;
+    if (planeTextAngle < -(2 * PI)) {
+      planeTextAngle += 2* PI;
     }
-    print(planeTextAngle);
-
-    stroke(255);
-    noFill();
-    translate(camInfo[0] + vec.x * 100, camInfo[1] + vec.y * 100, camInfo[2] + vec.z * 100);
-    rotate(planeTextAngle);
-    plane(100, 100);
-    pop();
   }
+
+  //from camera to origin (O - C)
+  var vecDir = createVector(camInfo[3] - camInfo[0], camInfo[4] - camInfo[1], camInfo[5] - camInfo[2]).normalize();
+
+  push();
+  stroke(255);
+  noFill();
+  translate(camInfo[0] + vecDir.x * 100, camInfo[1] + vecDir.y * 100, camInfo[2] + vecDir.z * 100);
+  rotateZ(planeTextAngle - PI/4);
+  rotateX(-58 * PI/180);
+  plane(112, 112);
+  pop();
+
 }
 
