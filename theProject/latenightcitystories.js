@@ -424,10 +424,7 @@ function moveCameraPOne() {
 function generateCityNet() {
   var i = 0;
   var j = 0;
-  stroke(60)
-  if ((pTwo && pTwoCounter >= 80) || pThree) {
-    stroke(pickedColour[0], pickedColour[1], pickedColour[2]);
-  }
+
   for (y = -58; y < 60; y += 24) {
     for(x = -70; x < 70; x += 24) {
       
@@ -446,6 +443,16 @@ function generateCityNet() {
       push();
       translate(x, y, height/2);
       ambientMaterial(40);
+      stroke(60);
+      if ((pTwo && pTwoCounter >= 80) || pThree) {
+        var ratio = height / maxHeight;
+        var newCol = [pickedColour[0] + ratio * (255 - pickedColour[0]),
+                      pickedColour[1] + ratio * (255 - pickedColour[1]),
+                      pickedColour[2] + ratio * (255 - pickedColour[2])];
+        stroke(newCol[0], newCol[1], newCol[2]);
+        newCol = [pickedColour[0] * ratio, pickedColour[1] * ratio, pickedColour[2] * ratio];
+        ambientMaterial(newCol[0], newCol[1], newCol[2]);
+      }
       box(20, 20, height);
       pop();
 
@@ -509,7 +516,6 @@ function generateOutskirtsParts(xMin, xMax, yMin, yMax) {
                             pickedColour[2] * ((width/2.5 - d) / (width/2.5))]
 
         stroke(strokeColour[0], strokeColour[1], strokeColour[2]);
-        //print(strokeColour);
       }
 
       push();
@@ -572,8 +578,9 @@ function showInfoFacingCamera() {
   var vecDir = createVector(camInfo[3] - camInfo[0], camInfo[4] - camInfo[1], camInfo[5] - camInfo[2]).normalize();
 
   push();
-  //stroke(255);
-  texture(planeTextTexture);
+  stroke(255);
+  //texture(planeTextTexture);
+  noFill();
   translate(camInfo[0] + vecDir.x * 100, camInfo[1] + vecDir.y * 100, camInfo[2] + vecDir.z * 100);
   rotateZ(planeTextAngle - PI/4);
   rotateX(-58 * PI/180);
