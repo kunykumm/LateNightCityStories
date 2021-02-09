@@ -36,6 +36,24 @@ div.coldBtn {
     display: inline-block;
 }
 
+.btnPW {
+    border: none;
+    background-color: #ffffff;
+    padding: 7px 20px;
+    font-size: 12px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.btnPB {
+    border: none;
+    background-color: #000000;
+    padding: 7px 20px;
+    font-size: 12px;
+    cursor: pointer;
+    display: inline-block;
+}
+
 .warm {color: orange;}
 .warm:hover {background: rgb(255, 94, 0);}
 .cold {color: dodgerblue;}
@@ -45,6 +63,8 @@ div.coldBtn {
 .cntrl:hover {background: rgba(59, 59, 59, 0.466);}
 .save {color: rgb(0, 225, 255);}
 .save:hover {background: rgba(30, 54, 56, 0.466);}
+.pWhite {color: rgb(0, 0, 0);}
+.pBlack {color: rgb(255, 255, 255);}
 input[type="submit"]:hover {background: black}
 
 div.story {
@@ -86,27 +106,59 @@ div.genButton {
     top: 262px;
 }
 
+div.speed {
+    position: fixed;
+    left: 45px;
+    top: 302px;
+    color: #888888;
+    font-family: "Helvetica";
+    font-size: 12px;
+    white-space: pre;
+}
+
 div.slowerButton {
     position: fixed;
     left: 60px;
-    top: 322px;
+    top: 368px;
 }
 
 div.pauseButton {
     position: fixed;
     left: 110px;
-    top: 322px;
+    top: 368px;
 }
 
 div.fasterButton {
     position: fixed;
     left: 186px;
-    top: 322px;
+    top: 368px;
+}
+
+div.polaroidColour {
+    position: fixed;
+    left: 45px;
+    top: 402px;
+    color: #888888;
+    font-family: "Helvetica";
+    font-size: 12px;
+    white-space: pre;
+}
+
+div.whitePolaroid {
+    position: fixed;
+    left: 60px;
+    top: 440px;
+}
+
+div.blackPolaroid {
+    position: fixed;
+    left: 112px;
+    top: 440px;
 }
 
 div.saveButton {
     position: fixed;
     left: 60px;
-    top: 362px;
+    top: 480px;
 }
 
