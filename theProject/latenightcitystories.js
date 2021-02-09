@@ -58,6 +58,7 @@ var defCamSpeed;
 var camSpeed;
 var isPaused;
 var planeTextAngle;
+var planeTextTexture;
 
 
 //---                                                                                        ---//
@@ -123,6 +124,7 @@ function setupVariables() {
   coldColour = [3, 75, 252];
   pickedColour = [];
   planeTextAngle = 0;
+  planeTextTexture = createGraphics(112, 112);
 }
 
 //---                                                                                        ---//
@@ -563,19 +565,37 @@ function showInfoFacingCamera() {
     if (planeTextAngle < -(2 * PI)) {
       planeTextAngle += 2* PI;
     }
+    createPlaneCameraTexture();
   }
 
   //from camera to origin (O - C)
   var vecDir = createVector(camInfo[3] - camInfo[0], camInfo[4] - camInfo[1], camInfo[5] - camInfo[2]).normalize();
 
   push();
-  stroke(255);
-  noFill();
+  //stroke(255);
+  texture(planeTextTexture);
   translate(camInfo[0] + vecDir.x * 100, camInfo[1] + vecDir.y * 100, camInfo[2] + vecDir.z * 100);
   rotateZ(planeTextAngle - PI/4);
   rotateX(-58 * PI/180);
   plane(112, 112);
   pop();
 
+}
+
+function createPlaneCameraTexture() {
+  planeTextTexture = createGraphics(112, 112);
+  planeTextTexture.clear();
+  planeTextTexture.noStroke();
+  planeTextTexture.background(0, 0);
+  for (j = 0; j < 5; ++j) {
+    for (i = 0; i < 6; ++i) {
+      if (allEmotions[j][i] == '1') {
+        planeTextTexture.fill(255);
+      } else {
+        planeTextTexture.fill(50);
+      }
+      planeTextTexture.square(10 + i * 5, 10 + j * 5, 3);
+    }
+  }
 }
 
