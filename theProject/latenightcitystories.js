@@ -75,6 +75,12 @@ var tW;
 //------------------------------------------- SETUP --------------------------------------------//
 //---                                                                                        ---//
 
+/**
+ * Loads json database of emotions.
+ * This project makes use of the 'NRC Sentiment and Emotion Lexicons', created by 'Saif M. Mohammad' at the National Research Council Canada.
+ * Link to 'NRC Sentiment and Emotion Lexicons': https://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm
+ * The 'NRC Sentiment and Emotion Lexicons' mentioned above is used in this project for non-commercial research and educational purposes.
+ */
 function preload() {
   jsonEndIndices = [966, 1682, 3112, 4052, 4689, 5311, 5732, 6199, 6922, 7028, 7103, 7568, 8268,
                     8506, 8858, 10039, 10108, 10919, 12480, 13172, 13551, 13808, 14126, 14128,
@@ -85,22 +91,26 @@ function preload() {
   //majorMonoFont = loadFont('https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap');
 }
 
-// function processJsonData() {
-//   //print(jsonData[0].En);
-//   //print(jsonData[5268].En);
-// }
-
+/**
+ * Sets up the canvas and all variables.
+ */
 function setup() {
   setupWindow();
   setupVariables();
 }
 
+/**
+ * Sets up the canvas.
+ */
 function setupWindow() {
   canvas = createCanvas(600, 600, WEBGL);
   canvas.position(260, 50);
   canvas.background(30);
 }
 
+/**
+ * Sets up all variables.
+ */
 function setupVariables() {
   generate = false;
   pOne = false;
@@ -144,10 +154,17 @@ function setupVariables() {
   isPolaroidPicked = 0;
 }
 
+
 //---                                                                                        ---//
 //---------------------------------------- JSON PARSING ----------------------------------------//
 //---                                                                                        ---//
 
+/**
+ * When button 'generate' is pressed, this function runs.
+ * It checks all the text fields needed for generating the city.
+ * If any is missed, an alert message is shown.
+ * Secondly, this function finds the words in the lexicon and inicialize arrays of emotions for each word.
+ */
 function getWords() {
   if (generate) return;
 
@@ -184,12 +201,18 @@ function getWords() {
   pOne = true;
 }
 
+/**
+ * Calls function validateAWord for each word written in the text fields.
+ */
 function validateWords() {
   firstEmotions = validateAWord(firstWord);
   secondEmotions = validateAWord(secondWord);
   thirdEmotions = validateAWord(thirdWord);
 }
 
+/**
+ * Put all emotions into one array to create a grid for the middle of the city.
+ */
 function fillAllEmotions() {
   allEmotions = [
     [firstEmotions[0], firstEmotions[1], firstEmotions[2], firstEmotions[3], firstEmotions[4], firstEmotions[5]],
@@ -200,6 +223,10 @@ function fillAllEmotions() {
   ]
 }
 
+/**
+ * This function calls another three functions which find the word in the lexicon and load its emotional values.
+ * @param word Word written in the text field.
+ */
 function validateAWord(word) {
   print("WordValidation START");
   word = word.toLowerCase();
@@ -218,6 +245,10 @@ function validateAWord(word) {
   return findTheEmotions(wordIndex);
 }
 
+/**
+ * 
+ * @param word 
+ */
 function findFirstLetterIndexRange(word) {
   var index = word.charCodeAt(0) - "a".charCodeAt();
   print("FirstLetter: " + index);
@@ -415,8 +446,6 @@ function draw() {
   generateCityNet();
   generateOutskirtsNet()
 
-  //fill(255, 150, 0, 50);
-  //sphere(80);
   texture(planeRoadsTexture);
   plane(600, 600);
 
@@ -536,8 +565,6 @@ function getValuesAroundBuilding(x, y) {
 
 function generateOutskirtsNet() {
 
-  //stroke(50);
-
   // ABOVE
   generateOutskirtsParts(-214, 218, -202, -58);
 
@@ -631,7 +658,6 @@ function showInfoFacingCamera() {
   var vecDir = createVector(camInfo[3] - camInfo[0], camInfo[4] - camInfo[1], camInfo[5] - camInfo[2]).normalize();
 
   push();
-  //stroke(255);
   texture(planeTextTexture);
   translate(camInfo[0] + vecDir.x * 700, camInfo[1] + vecDir.y * 700, camInfo[2] + vecDir.z * 700);
   rotateZ(planeTextAngle - PI/4);
