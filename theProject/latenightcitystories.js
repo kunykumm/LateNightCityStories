@@ -343,6 +343,11 @@ function averageEmotions() {
 //-------------------------------------- HTML INTERACTION --------------------------------------//
 //---                                                                                        ---//
 
+/**
+ * Function called by slower, pause and faster button of the UI.
+ * Adjusts the speed of the rotation in the Phase III.
+ * @param value -1 to slow down, 0 to pause, +1 to speed it up
+ */
 function changeSpeedPThree(value) {
   if (!pThree) {
     alert("Wait for the image to generate.");
@@ -361,6 +366,10 @@ function changeSpeedPThree(value) {
   }
 }
 
+/**
+ * Function called by cold / warm buttons changed the colour mood of the scene
+ * @param value -1 for cold colour (blue), 1 for hot colour (orange)
+ */
 function changeColourMood(value) {
   moodColour = value;
   if (value == -1) {
@@ -371,6 +380,10 @@ function changeColourMood(value) {
   }
 }
 
+/**
+ * Function called by white / black buttons changing the colour of the polaroid
+ * @param value -1 for white background and black text, 1 for inverse
+ */
 function pickPolaroidCol(value) {
   isPolaroidPicked = value;
   if (value == -1) {
@@ -383,6 +396,10 @@ function pickPolaroidCol(value) {
   }
 }
 
+/**
+ * Function called by save button.
+ * Saves the render as a polaroid with chosen attributes.
+ */
 function saveImage() {
   if (!pThree) {
     alert("At first, generate an image.");
@@ -399,6 +416,9 @@ function saveImage() {
   createPolaroid();
 }
 
+/**
+ * Creates polaroid for the save in the off-screen renderer.
+ */
 function createPolaroid() {
   polaroid = createGraphics(700, 840);
   polaroid.background(polaroidColour);
@@ -417,73 +437,95 @@ function createPolaroid() {
   save(polaroid, "late_night_city_stories_" + hour() + "_" + minute() + ".png");
 }
 
+
 //---                                                                                        ---//
 //-------------------------------------------- DRAW --------------------------------------------//
 //---                                                                                        ---//
-  
+
+/**
+ * Draw function called every frame. 
+ * Contains conditions for each phase.
+ */
 function draw() {
   if (!generate) return;
   
   canvas.background(0);
   lights();
 
-  if (!isBTGenerated) {
-    createGroundTexture();
-    isBTGenerated = true;
-  }
-
   if (pOne) {
-    if (pOneCameraSlide) slideCameraAboveCity();
-    if (pOneCameraMov) moveCameraPOne();
+    phaseOne();
   }
-  if (pTwo || pThree) {
-
-    if (pTwo) {
-      if (pTwoCounter >= 20) {
-        pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
-        createGroundTexture();
-      }
-      if (pTwoCounter >= 40) {
-        pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
-        createGroundTexture();
-      }
-      if (pTwoCounter >= 60) {
-        pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
-        createGroundTexture();
-      }
-      phaseTwo();
-      pTwoCounter += 1;
-    }
-  
-    if (pThree) {
-      pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
-      pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
-      pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
-      moveCameraPThree();
-      showInfoFacingCamera();
-    }
+  else if (pTwo) {
+    phaseTwo();
+  }
+  else if (pThree) {
+    phaseThree();
   }
 
   // THE CITY
   generateCityNet();
   generateOutskirtsNet()
 
+  // THE GROUND
   texture(planeRoadsTexture);
   plane(600, 600);
 
+  // Beginning - sliding camera
   if (pOneCameraSlide) {
     slideCameraFade();
   }
 }
 
+/**
+ * Phase I controlling function.
+ */
+function phaseOne() {
+  if (!isBTGenerated) {
+    createGroundTexture();
+    isBTGenerated = true;
+  }
+  if (pOneCameraSlide) slideCameraAboveCity();
+  if (pOneCameraMov) moveCameraPOne();
+}
+
+/**
+ * Phase II controlling function.
+ */
 function phaseTwo() {
+  if (pTwoCounter >= 20) {
+    pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
+    createGroundTexture();
+  }
+  if (pTwoCounter >= 40) {
+    pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
+    createGroundTexture();
+  }
+  if (pTwoCounter >= 60) {
+    pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
+    createGroundTexture();
+  }
   if (pTwoCounter >= 80) {
     pTwo = false;
     pThree = true;
     createGroundTexture();
   }
+  pTwoCounter += 1;
 }
 
+/**
+ * Phase III controlling function.
+ */
+function phaseThree() {
+  pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
+  pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
+  pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
+  moveCameraPThree();
+  showInfoFacingCamera();
+}
+
+/**
+ * Phase I - Sliding camera.
+ */
 function slideCameraAboveCity() {
   if (pOneSlideCounter == 300) {
     pOneCameraSlide = false;
@@ -497,6 +539,9 @@ function slideCameraAboveCity() {
   }
 }
 
+/**
+ * Phase I - Fade from black to transparent.
+ */
 function slideCameraFade() {
   var val = 255 - (pOneSlideCounter * 255 / 300);
   fill(0, val);
@@ -507,6 +552,9 @@ function slideCameraFade() {
   pop();
 }
 
+/**
+ * Phase I - Moving camera from up to the bottom-side.
+ */
 function moveCameraPOne() {
   if (pOneCamCounter == 100) {
     pOneCameraMov = false;
@@ -525,6 +573,10 @@ function moveCameraPOne() {
   pOneCamCounter += 1;
 }
 
+/**
+ * All Phases - City generation. 
+ * This code creates the middle block of buildings that reflect emotions from the words.
+ */
 function generateCityNet() {
   var i = 0;
   var j = 0;
@@ -568,6 +620,11 @@ function generateCityNet() {
   noStroke();
 }
 
+/**
+ * Helper function for 'generateCityNet' to decide, what height the buildings should be, if they are not in a position of '1'
+ * @param x X-coordinate of the current building.
+ * @param y Y-coordinate of the current building.
+ */
 function getValuesAroundBuilding(x, y) {
   var val = 0;
   if (x - 1 >= 0) {
@@ -585,6 +642,9 @@ function getValuesAroundBuilding(x, y) {
   return val;
 }
 
+/**
+ * Generate outskirts around the main city block.
+ */
 function generateOutskirtsNet() {
 
   // ABOVE
@@ -602,6 +662,13 @@ function generateOutskirtsNet() {
   noStroke();
 }
 
+/**
+ * Generates the outskirts around the main city block within given boundaries (coordinates)
+ * @param xMin minimal X coordinate of the boundary
+ * @param xMax maximal X coordinate of the boundary
+ * @param yMin minimal Y coordinate of the boundary
+ * @param yMax maximal Y coordinate of the boundary
+ */
 function generateOutskirtsParts(xMin, xMax, yMin, yMax) {
 
   for (y = yMin; y < yMax; y += 24) {
@@ -629,6 +696,11 @@ function generateOutskirtsParts(xMin, xMax, yMin, yMax) {
   }
 }
 
+/**
+ * Calculates the building height on given coordinates with sin and cos functions.
+ * @param x X-coordinate of the building
+ * @param y Y-coordinate of the building
+ */
 function calcuteOutskirtsBuildingsHeight(x, y) {
   var h = 0;
   var d = dist(0, 0, x, y);
@@ -641,6 +713,10 @@ function calcuteOutskirtsBuildingsHeight(x, y) {
   return h;
 }
 
+/**
+ * Creates the ground texture beneath the city.
+ * Generated once at the beginning of the Phase I, then few times during the Phase II, and it stays the same during the Phase III.
+ */
 function createGroundTexture() {
   var ratio = pTwoCounter / 20;
   planeRoadsTexture.noStroke();
@@ -658,6 +734,9 @@ function createGroundTexture() {
   } 
 }
 
+/**
+ * Camera rotation around the city.
+ */
 function moveCameraPThree() {
   if (!isPaused) {
     var vec = createVector(camInfo[0], camInfo[1]).rotate(-camSpeed);
@@ -667,6 +746,10 @@ function moveCameraPThree() {
   }
 }
 
+/**
+ * Renders a plane behind a city to show information about it. 
+ * The plane rotates with the camera to show the same face of the plane every frame.
+ */
 function showInfoFacingCamera() {
   if (!isPaused) {
     planeTextAngle -= camSpeed;
@@ -689,6 +772,9 @@ function showInfoFacingCamera() {
 
 }
 
+/**
+ * Creates texture for the plane behind the city always facing the camera.
+ */
 function createPlaneCameraTexture() {
   planeTextTexture = createGraphics(224, 224);
   planeTextTexture.clear();
@@ -699,6 +785,11 @@ function createPlaneCameraTexture() {
   drawCoordinates();
 }
 
+/**
+ * Draws minimalistic grid of buildings in the upper left corner. 
+ * Buildings with full height are shown in lighter colour.
+ * Small dot is drawn after each 10 squares (in rows), to show where the words end.
+ */
 function drawBuildingsNetInfo() {
   for (j = 0; j < 5; ++j) {
     for (i = 0; i < 6; ++i) {
@@ -720,6 +811,9 @@ function drawBuildingsNetInfo() {
   }
 }
 
+/**
+ * Draws textual information about the percentage of each emotion contained within the city.
+ */
 function drawInfoEmotions() {
   var curF = int(frameCount / 20) % 10;
   push();
@@ -732,6 +826,12 @@ function drawInfoEmotions() {
   pop();
 }
 
+/**
+ * Draws textual information in the form of 'coordinates' changing every few frames.
+ * The coordinates are randomized representations of the words written in the text fields.
+ * Either a letter from the word is written or its ASCII value, to gether with randomized symbols.
+ * This resembles real coordinates system. 
+ */
 function drawCoordinates() {
   var curF = int(frameCount / 10) % 10;
 
@@ -752,6 +852,10 @@ function drawCoordinates() {
   pop();
 }
 
+/**
+ * Randomizes the characters of the words to 'coordinates-like' line of text.
+ * @param originalW Original word from the text field. 
+ */
 function generateWordCoordinates(originalW) {
   newW = "";
   for (i = 0; i < originalW.length; ++i) {
