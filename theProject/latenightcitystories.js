@@ -226,6 +226,7 @@ function fillAllEmotions() {
 /**
  * This function calls another three functions which find the word in the lexicon and load its emotional values.
  * @param word Word written in the text field.
+ * Returns the array of emotions for current word.
  */
 function validateAWord(word) {
   print("WordValidation START");
@@ -246,8 +247,9 @@ function validateAWord(word) {
 }
 
 /**
- * 
- * @param word 
+ * Calculates the index of the first letter of the word.
+ * Returns that index.
+ * @param word Word written in the text field.
  */
 function findFirstLetterIndexRange(word) {
   var index = word.charCodeAt(0) - "a".charCodeAt();
@@ -255,6 +257,13 @@ function findFirstLetterIndexRange(word) {
   return index;
 }
 
+/**
+ * Finds the index for the word in the lexicon.
+ * @param word Word written in the text field.
+ * @param start Starting index (from jsonEndIndices)
+ * @param stop Exnding index (from jsonEndIndices)
+ * Returns index in the lexicon.
+ */
 function findWordInJson(word, start, stop) {
   print(start);
   print(stop);
@@ -268,6 +277,12 @@ function findWordInJson(word, start, stop) {
   return -1;
 }
 
+/**
+ * Fills the emotions for the word
+ * @param wordIndex Index of the word in the lexicon.
+ * If the word was not found, index is -1 and the emotions are randomized.
+ * Returns array of emotions.
+ */
 function findTheEmotions(wordIndex) {
   if (wordIndex == -1) {
 
@@ -298,6 +313,9 @@ function findTheEmotions(wordIndex) {
   return emotions;
 }
 
+/**
+ * Sum all ones in the array.
+ */
 function makeSumOfOnes() {
   for (i = 0; i < 10; ++i) {
     if (firstEmotions[i] == '1') sumOfOnes++;
@@ -306,6 +324,9 @@ function makeSumOfOnes() {
   }
 }
 
+/**
+ * Average all values for text.
+ */
 function averageEmotions() {
   var count = 0;
   for (i = 0; i < 10; ++i) {
@@ -316,6 +337,7 @@ function averageEmotions() {
     averageEmos.push(count / sumOfOnes);
   }
 }
+
 
 //---                                                                                        ---//
 //-------------------------------------- HTML INTERACTION --------------------------------------//
