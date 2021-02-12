@@ -3,7 +3,7 @@ div.title {
     left: 60px;
     top: 55px;
     color: #b8b8b8;
-    font-family: "Helvetica";
+    font-family: 'Courier New', monospace;
 }
 
 div.mood {
@@ -11,7 +11,7 @@ div.mood {
     left: 60px;
     top: 88px;
     color: #888888;
-    font-family: "Helvetica";
+    font-family: 'Courier New', monospace;
     font-size: 12px;
 }
 
@@ -34,6 +34,7 @@ div.coldBtn {
     font-size: 12px;
     cursor: pointer;
     display: inline-block;
+    font-family: 'Courier New', monospace;
 }
 
 .btnPW {
@@ -43,6 +44,7 @@ div.coldBtn {
     font-size: 12px;
     cursor: pointer;
     display: inline-block;
+    font-family: 'Courier New', monospace;
 }
 
 .btnPB {
@@ -52,19 +54,34 @@ div.coldBtn {
     font-size: 12px;
     cursor: pointer;
     display: inline-block;
+    font-family: 'Courier New', monospace;
+}
+
+.btnRE {
+    border: none;
+    background-color: #000000;
+    padding: 7px 20px;
+    font-size: 12px;
+    cursor: pointer;
+    display: inline-block;
+    font-family: 'Courier New', monospace;
 }
 
 .warm {color: orange;}
 .warm:hover {background: rgb(255, 94, 0);}
 .cold {color: dodgerblue;}
-.cold:hover {background: rgba(0, 61, 122, 0.466);}
+.cold:hover {background: rgb(0, 61, 122);}
 .submitBtn {color: #b8b8b8;}
 .cntrl {color: gray;}
 .cntrl:hover {background: rgba(59, 59, 59, 0.466);}
-.save {color: rgb(0, 225, 255);}
-.save:hover {background: rgba(30, 54, 56, 0.466);}
+.save {color: #b8b8b8;}
+.save:hover {background: rgba(99, 99, 99, 0.466);}
 .pWhite {color: rgb(0, 0, 0);}
+.pWhite:hover {background: rgb(207, 207, 207);}
 .pBlack {color: rgb(255, 255, 255);}
+.pBlack:hover {background: rgb(32, 32, 32);}
+.rest {color: #575757;}
+.rest:hover {background: rgb(22, 22, 22);}
 input[type="submit"]:hover {background: black}
 
 div.story {
@@ -72,7 +89,7 @@ div.story {
     left: 60px;
     top: 155px;
     color: #888888;
-    font-family: "Helvetica";
+    font-family: 'Courier New', monospace;
     font-size: 12px;
 }
 
@@ -108,10 +125,10 @@ div.genButton {
 
 div.speed {
     position: fixed;
-    left: 45px;
+    left: 32px;
     top: 302px;
     color: #888888;
-    font-family: "Helvetica";
+    font-family: 'Courier New', monospace;
     font-size: 12px;
     white-space: pre;
 }
@@ -130,16 +147,16 @@ div.pauseButton {
 
 div.fasterButton {
     position: fixed;
-    left: 186px;
+    left: 193px;
     top: 368px;
 }
 
 div.polaroidColour {
     position: fixed;
-    left: 45px;
+    left: 32px;
     top: 402px;
     color: #888888;
-    font-family: "Helvetica";
+    font-family: 'Courier New', monospace;
     font-size: 12px;
     white-space: pre;
 }
@@ -158,7 +175,85 @@ div.blackPolaroid {
 
 div.saveButton {
     position: fixed;
-    left: 60px;
+    left: 215px;
     top: 480px;
+}
+
+div.verticL01 {
+  border-left: 2px solid #242424;
+  height: 495px;
+  position: fixed;
+  left: 40px;
+  top: 0;
+}
+
+hr.horizL01 {
+    width:160px;
+    height:2px;
+    text-align:left;
+    margin-left:40px;
+    margin-top:475px;
+    background-color:#242424;
+    border: none;
+}
+
+div.verticL02 {
+    border-left: 2px solid #1b1b1b;
+    height: 70px;
+    position: fixed;
+    left: 282px;
+    top: 523px;
+}
+
+hr.horizL02 {
+    width:243px;
+    height:2px;
+    text-align:left;
+    margin-left:40px;
+    margin-top:95px;
+    background-color:#1b1b1b;
+    border: none;
+}
+
+div.verticL03 {
+    border-left: 2px solid #1b1b1b;
+    height: 100%;
+    position: fixed;
+    left: 40px;
+    top: 591px;
+}
+
+div.verticL04 {
+    border-left: 2px solid #1b1b1b;
+    height: 100%;
+    position: fixed;
+    left: 300px;
+    top: 0px;
+}
+
+div.lexiconCredits {
+    position: fixed;
+    left: 27px;
+    top: 591px;
+    color: #3d3d3d;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    white-space: pre;
+}
+
+div.restart {
+    position: fixed;
+    left: 27px;
+    top: 495px;
+    color: #575757;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    white-space: pre;
+}
+
+div.restartBtn {
+    position: fixed;
+    left: 110px;
+    top: 548px;
 }
 

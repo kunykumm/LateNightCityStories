@@ -77,7 +77,7 @@ var tW;
 
 /**
  * Loads json database of emotions.
- * This project makes use of the 'NRC Sentiment and Emotion Lexicons', created by 'Saif M. Mohammad' at the National Research Council Canada.
+ * This project makes use of the 'NRC Word-Emotion Association Lexicon', created by 'Saif M. Mohammad' at the National Research Council Canada.
  * Link to 'NRC Sentiment and Emotion Lexicons': https://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm
  * The 'NRC Sentiment and Emotion Lexicons' mentioned above is used in this project for non-commercial research and educational purposes.
  */
@@ -104,7 +104,7 @@ function setup() {
  */
 function setupWindow() {
   canvas = createCanvas(600, 600, WEBGL);
-  canvas.position(260, 50);
+  canvas.position(345, 50);
   canvas.background(30);
 }
 
