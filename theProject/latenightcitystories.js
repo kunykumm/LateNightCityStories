@@ -16,9 +16,7 @@ var generateButton;
 var firstWord;
 var secondWord;
 var thirdWord;
-var firstWasFound;
-var secondWasFound;
-var thirdWasFound;
+var whatWordsWereFound;
 var notFoundSum;
 
 var firstEmotions;
@@ -158,9 +156,7 @@ function setupVariables() {
   sW = "";
   tW = "";
   isPolaroidPicked = 0;
-  firstWasFound = false;
-  secondWasFound = false;
-  thirdWasFound = false;
+  whatWordsWereFound = [false, false, false];
   notFoundSum = 0;
   showErrorText = false;
 }
@@ -220,7 +216,7 @@ function validateWords() {
   firstEmotions = validateAWord(firstWord, 1);
   secondEmotions = validateAWord(secondWord, 2);
   thirdEmotions = validateAWord(thirdWord, 3);
-  print(firstWasFound + " " + secondWasFound + " " + thirdWasFound);
+  print(whatWordsWereFound[0] + " " + whatWordsWereFound[1] + " " + whatWordsWereFound[2]);
 }
 
 /**
@@ -258,11 +254,11 @@ function validateAWord(word, wI) {
   var wordIndex = findWordInJson(word, start, stop);
   if (wordIndex != -1) {
     if (wI == 1) {
-      firstWasFound = true;
+      whatWordsWereFound[0] = true;
     } else if (wI == 2) {
-      secondWasFound = true;
+      whatWordsWereFound[1] = true;
     } else if (wI == 3) {
-      thirdWasFound = true;
+      whatWordsWereFound[2] = true;
     }
   } else {
     notFoundSum++;
@@ -639,6 +635,7 @@ function generateCityNet() {
       }
 
       push();
+      var opa = setOpacityToBuilding(i, j);
       translate(x, y, height/2);
       ambientMaterial(40);
       stroke(60);
@@ -647,9 +644,15 @@ function generateCityNet() {
         var newCol = [pickedColour[0] + ratio * (255 - pickedColour[0]),
                       pickedColour[1] + ratio * (255 - pickedColour[1]),
                       pickedColour[2] + ratio * (255 - pickedColour[2])];
-        stroke(newCol[0], newCol[1], newCol[2]);
-        newCol = [pickedColour[0] * ratio, pickedColour[1] * ratio, pickedColour[2] * ratio];
-        ambientMaterial(newCol[0], newCol[1], newCol[2]);
+        if (opa == 100) {
+          stroke(newCol[0], newCol[1], newCol[2]);
+          newCol = [pickedColour[0] * ratio, pickedColour[1] * ratio, pickedColour[2] * ratio];
+          ambientMaterial(newCol[0], newCol[1], newCol[2]);
+        } else {
+          stroke(newCol[0] - 80, newCol[1] - 80, newCol[2] - 80, opa);
+          newCol = [pickedColour[0] * ratio, pickedColour[1] * ratio, pickedColour[2] * ratio];
+          fill(newCol[0], newCol[1], newCol[2], opa);
+        }
       }
       box(20, 20, height);
       pop();
@@ -682,6 +685,17 @@ function getValuesAroundBuilding(x, y) {
     if (allEmotions[y + 1][x] == '1') val += 1;
   }
   return val;
+}
+
+/**
+ * If a word
+ */
+function setOpacityToBuilding(x, y) {
+  var wI = int((y * 6 + x) / 10);
+  if (whatWordsWereFound[wI] == false) {
+    return 50;
+  }
+  return 100;
 }
 
 /**
@@ -937,7 +951,7 @@ function generateErrorText() {
 function drawPotentialErrorText() {
   if (showErrorText) {
     push();
-    planeTextTexture.fill(125 + random(-15, 15), 92);
+    planeTextTexture.fill(90 + random(-15, 15));
     planeTextTexture.textFont("Courier New");
     planeTextTexture.textSize(5);
     planeTextTexture.textAlign(RIGHT);
