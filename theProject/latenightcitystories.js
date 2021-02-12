@@ -16,6 +16,10 @@ var generateButton;
 var firstWord;
 var secondWord;
 var thirdWord;
+var firstWasFound;
+var secondWasFound;
+var thirdWasFound;
+var notFoundSum;
 
 var firstEmotions;
 var secondEmotions;
@@ -69,6 +73,8 @@ var planeTextTexture;
 var fW;
 var sW;
 var tW;
+var errorSumText;
+var showErrorText;
 
 
 //---                                                                                        ---//
@@ -144,12 +150,17 @@ function setupVariables() {
   planeTextAngle = 0;
   planeTextTexture = createGraphics(112, 112);
   averageEmos = [];
-  emotionsStrings = ["Positive", "Negative", "Anger", "Anticipation", "Disgust", "Fear", "Joy", "Sadness", "Surprise", "Trust"];
+  emotionsStrings = ["positive", "negative", "anger", "anticipation", "disgust", "fear", "joy", "sadness", "surprise", "trust"];
   fancySymbols = ["°", "'", "''", "/", ",", ".", ";", ":"];
   fW = "";
   sW = "";
   tW = "";
   isPolaroidPicked = 0;
+  firstWasFound = false;
+  secondWasFound = false;
+  thirdWasFound = false;
+  notFoundSum = 0;
+  showErrorText = false;
 }
 
 
@@ -194,6 +205,7 @@ function getWords() {
   print(allEmotions);
   makeSumOfOnes();
   averageEmotions();
+  generateErrorText();
 
   generate = true;
   pOne = true;
@@ -203,9 +215,10 @@ function getWords() {
  * Calls function validateAWord for each word written in the text fields.
  */
 function validateWords() {
-  firstEmotions = validateAWord(firstWord);
-  secondEmotions = validateAWord(secondWord);
-  thirdEmotions = validateAWord(thirdWord);
+  firstEmotions = validateAWord(firstWord, 1);
+  secondEmotions = validateAWord(secondWord, 2);
+  thirdEmotions = validateAWord(thirdWord, 3);
+  print(firstWasFound + " " + secondWasFound + " " + thirdWasFound);
 }
 
 /**
@@ -226,7 +239,7 @@ function fillAllEmotions() {
  * @param word Word written in the text field.
  * Returns the array of emotions for current word.
  */
-function validateAWord(word) {
+function validateAWord(word, wI) {
   print("WordValidation START");
   word = word.toLowerCase();
   var index = findFirstLetterIndexRange(word);
@@ -241,6 +254,17 @@ function validateAWord(word) {
   stop = jsonEndIndices[index];
 
   var wordIndex = findWordInJson(word, start, stop);
+  if (wordIndex != -1) {
+    if (wI == 1) {
+      firstWasFound = true;
+    } else if (wI == 2) {
+      secondWasFound = true;
+    } else if (wI == 3) {
+      thirdWasFound = true;
+    }
+  } else {
+    notFoundSum++;
+  }
   return findTheEmotions(wordIndex);
 }
 
@@ -666,6 +690,9 @@ function generateOutskirtsNet() {
   // BELOW
   generateOutskirtsParts(-214, 218, 62, 185);
 
+  // VERY FAR, ALL DIRECTIONS (better effect when camera slide is active)
+  //generateOutskirtsParts(-454, -210, -442, -200);
+
   noStroke();
 }
 
@@ -790,6 +817,7 @@ function createPlaneCameraTexture() {
   drawBuildingsNetInfo();
   drawInfoEmotions();
   drawCoordinates();
+  drawPotentialErrorText();
 }
 
 /**
@@ -843,6 +871,7 @@ function drawCoordinates() {
   var curF = int(frameCount / 10) % 10;
 
   if (curF == 0) {
+    showErrorText = true;
     fW = generateWordCoordinates(firstWord);
     sW = generateWordCoordinates(secondWord);
     tW = generateWordCoordinates(thirdWord);
@@ -876,5 +905,33 @@ function generateWordCoordinates(originalW) {
     newW += " "; 
   }
   return newW;
+}
+
+/**
+ * Generates the text for the number of not found words.
+ */
+function generateErrorText() {
+  if (notFoundSum == 0) {
+    errorSumText = "all words found. "
+  } else if (notFoundSum == 1) {
+    errorSumText = "error: 1 word not found. "
+  } else {
+    errorSumText = "error: " + notFoundSum + " words not found. "
+  }
+}
+
+/**
+ * Shows the potential error message about not found words.
+ */
+function drawPotentialErrorText() {
+  if (showErrorText) {
+    push();
+    planeTextTexture.fill(125 + random(-15, 15), 92);
+    planeTextTexture.textFont("Courier New");
+    planeTextTexture.textSize(5);
+    planeTextTexture.textAlign(RIGHT);
+    planeTextTexture.text(errorSumText, 214, 43);
+    pop();
+  }
 }
 
