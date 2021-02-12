@@ -78,8 +78,8 @@ var tW;
 /**
  * Loads json database of emotions.
  * This project makes use of the 'NRC Word-Emotion Association Lexicon', created by 'Saif M. Mohammad' at the National Research Council Canada.
- * Link to 'NRC Sentiment and Emotion Lexicons': https://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm
- * The 'NRC Sentiment and Emotion Lexicons' mentioned above is used in this project for non-commercial research and educational purposes.
+ * Link to 'NRC Word-Emotion Association Lexicon': https://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm
+ * The 'NRC Word-Emotion Association Lexicon' mentioned above is used in this project for non-commercial research and educational purposes.
  */
 function preload() {
   jsonEndIndices = [966, 1682, 3112, 4052, 4689, 5311, 5732, 6199, 6922, 7028, 7103, 7568, 8268,
@@ -87,8 +87,6 @@ function preload() {
                     14165, 14181];
   var jsonUrl = 'https://api.npoint.io/9e0b7a74e41f4a55ee5e';
   jsonData = loadJSON(jsonUrl /**, processJsonData**/);
-
-  //majorMonoFont = loadFont('https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap');
 }
 
 /**
@@ -435,6 +433,15 @@ function createPolaroid() {
   polaroid.text(firstWord + ". " + secondWord + ". " + thirdWord + ".", 350, 730)
 
   save(polaroid, "late_night_city_stories_" + hour() + "_" + minute() + ".png");
+}
+
+/**
+ * Function called by restart button.
+ * Restores application to the default state.
+ */
+function restartCity() {
+  canvas.background(30);
+  setupVariables();
 }
 
 
