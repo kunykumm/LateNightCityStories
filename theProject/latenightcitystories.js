@@ -26,6 +26,7 @@ var secondEmotions;
 var thirdEmotions;
 var allEmotions;
 var sumOfOnes;
+var sumOfOnesPN;
 var averageEmos;
 var emotionsStrings;
 var fancySymbols;
@@ -129,6 +130,7 @@ function setupVariables() {
   xShift = random(0, 100);
   yShift = random(0, 100);
   sumOfOnes = 0;
+  sumOfOnesPN = 0;
   maxHeight = 120;
   pOneCameraMov = false;
   pOneCamCounter = 0;
@@ -339,7 +341,12 @@ function findTheEmotions(wordIndex) {
  * Sum all ones in the array.
  */
 function makeSumOfOnes() {
-  for (i = 0; i < 10; ++i) {
+  for (i = 0; i < 2; ++i) {
+    if (firstEmotions[i] == '1') sumOfOnesPN++;
+    if (secondEmotions[i] == '1') sumOfOnesPN++;
+    if (thirdEmotions[i] == '1') sumOfOnesPN++;
+  }
+  for (i = 2; i < 10; ++i) {
     if (firstEmotions[i] == '1') sumOfOnes++;
     if (secondEmotions[i] == '1') sumOfOnes++;
     if (thirdEmotions[i] == '1') sumOfOnes++;
@@ -356,7 +363,11 @@ function averageEmotions() {
     if (firstEmotions[i] == '1') count++;
     if (secondEmotions[i] == '1') count++;
     if (thirdEmotions[i] == '1') count++;
-    averageEmos.push(count / sumOfOnes);
+    if (i < 2) {
+      averageEmos.push(count / sumOfOnesPN);
+    } else {
+      averageEmos.push(count / sumOfOnes);
+    }
   }
 }
 
