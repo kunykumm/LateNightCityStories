@@ -57,6 +57,11 @@ var pOneCamAngle;
 var camInfo;
 var planeRoadsTexture;
 
+var scatteredBX;
+var scatteredBY;
+var scatteredBH;
+var scatteredBA;
+
 // PHASE II.
 
 var isBTGenerated;
@@ -159,6 +164,14 @@ function setupVariables() {
   whatWordsWereFound = [false, false, false];
   notFoundSum = 0;
   showErrorText = false;
+  scatteredBX = [];
+  scatteredBY = [];
+  scatteredBH = [];
+  scatteredBA = [];
+  calculateScatteredBuildings(-454, 458, -442, -200);
+  calculateScatteredBuildings(-454, 458, 187, 425);
+  calculateScatteredBuildings(-454, -68, -58, 60);
+  calculateScatteredBuildings(80, 450, -58, 60);
 }
 
 
@@ -716,7 +729,7 @@ function generateOutskirtsNet() {
   generateOutskirtsParts(-214, 218, 62, 185);
 
   // VERY FAR, ALL DIRECTIONS (better effect when camera slide is active)
-  //generateOutskirtsParts(-454, -210, -442, -200);
+  drawScatteredBuildings();
 
   noStroke();
 }
@@ -732,20 +745,12 @@ function generateOutskirtsParts(xMin, xMax, yMin, yMax) {
 
   for (y = yMin; y < yMax; y += 24) {
     for (x = xMin; x < xMax; x += 24) {
-
-      var h = calcuteOutskirtsBuildingsHeight(x, y);
+      
+      var d = dist(0, 0, x, y);
+      var h = calcuteOutskirtsBuildingsHeight(x, y, d);
       if (h == 0) continue;
 
-      stroke(50);
-      if ((pTwo && pTwoCounter >= 80) || pThree) {
-        var d = dist(0, 0, x, y);
-        var strokeColour = [pickedColour[0] * ((width/2.5 - d) / (width/2.5)),
-                            pickedColour[1] * ((width/2.5 - d) / (width/2.5)),
-                            pickedColour[2] * ((width/2.5 - d) / (width/2.5))]
-
-        stroke(strokeColour[0], strokeColour[1], strokeColour[2]);
-      }
-
+      setStrokeColourBuildings(d);
       push();
       translate(x, y, h/2);
       fill(50, 150);
@@ -755,14 +760,24 @@ function generateOutskirtsParts(xMin, xMax, yMin, yMax) {
   }
 }
 
+function setStrokeColourBuildings(d) {
+  stroke(50);
+  if ((pTwo && pTwoCounter >= 80) || pThree) {
+    var strokeColour = [pickedColour[0] * ((width/2.5 - d) / (width/2.5)),
+                        pickedColour[1] * ((width/2.5 - d) / (width/2.5)),
+                        pickedColour[2] * ((width/2.5 - d) / (width/2.5))]
+
+    stroke(strokeColour[0], strokeColour[1], strokeColour[2]);
+  }
+}
+
 /**
  * Calculates the building height on given coordinates with sin and cos functions.
  * @param x X-coordinate of the building
  * @param y Y-coordinate of the building
  */
-function calcuteOutskirtsBuildingsHeight(x, y) {
+function calcuteOutskirtsBuildingsHeight(x, y, d) {
   var h = 0;
-  var d = dist(0, 0, x, y);
   if (d < 200) {
     if (noise(x * 0.02, y * 0.02) - 0.02 < 0.4) return h;
     d = d / 1000;
@@ -770,6 +785,48 @@ function calcuteOutskirtsBuildingsHeight(x, y) {
     if (h > 20) h = abs(h - 20);
   }
   return h;
+}
+
+/**
+ * 
+ * @param xMin 
+ * @param xMax 
+ * @param yMin 
+ * @param yMax 
+ */
+function calculateScatteredBuildings(xMin, xMax, yMin, yMax) {
+  for (y = yMin; y < yMax; y += 24) {
+    for (x = xMin; x < xMax; x += 24) {
+      var d = dist(0, 0, x, y);
+      var r = (sin(x) / cos(y) - 1.3);
+      if (r < 0 || d > 400) continue;
+      var h = 0;
+      scatteredBA.push(150 - (d/400)*100);
+      d = d / 1000;
+      var h = abs(sin(y * d) * x / 6 - (cos(x * d) * y / 6));
+      if (h > 20) h = 25;
+      scatteredBX.push(x);
+      scatteredBY.push(y);
+      scatteredBH.push(h);
+    }
+  }
+}
+
+/**
+ * 
+ */
+function drawScatteredBuildings() {
+  var d = 0;
+  var siz = scatteredBH.length;
+  for (i = 0; i < siz; i++) {
+    d = dist(0, 0, scatteredBX[i], scatteredBY[i]);
+    push();
+    translate(scatteredBX[i], scatteredBY[i], scatteredBH[i]/2);
+    stroke(30);
+    fill(50, scatteredBA[i]);
+    box(20, 20, scatteredBH[i]);
+    pop();
+  }
 }
 
 /**
