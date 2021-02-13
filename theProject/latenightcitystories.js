@@ -62,6 +62,7 @@ var cityCentreY;
 var cityCentreH;
 var cityCentreFC;
 var cityCentreSC;
+var newColours;
 
 var scatteredBX;
 var scatteredBY;
@@ -111,6 +112,7 @@ function preload() {
 function setup() {
   setupWindow();
   setupVariables();
+  frameRate(30);
 }
 
 /**
@@ -179,6 +181,7 @@ function setupVariables() {
   scatteredBY = [];
   scatteredBH = [];
   scatteredBA = [];
+  newColours = false;
   calculateScatteredBuildings(-454, 458, -442, -200);
   calculateScatteredBuildings(-454, 458, 187, 425);
   calculateScatteredBuildings(-454, -68, -58, 60);
@@ -520,16 +523,19 @@ function draw() {
 
   if (pOne) {
     phaseOne();
+    generateCityNetPOnePTwo();
   }
   else if (pTwo) {
     phaseTwo();
+    if (pTwoCounter < 80) generateCityNetPOnePTwo();
+    else generateCityNetPThree();
   }
   else if (pThree) {
     phaseThree();
+    generateCityNetPThree();
   }
 
   // THE CITY
-  generateCityNet();
   generateOutskirtsNet()
 
   // THE GROUND
@@ -560,20 +566,26 @@ function phaseOne() {
 function phaseTwo() {
   if (pTwoCounter >= 20) {
     pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
+    lightFalloff(1, 0, 0);
     createGroundTexture();
   }
   if (pTwoCounter >= 40) {
-    pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
+    lightFalloff(0.5, 0, 0);
     createGroundTexture();
   }
   if (pTwoCounter >= 60) {
-    pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
+    lightFalloff(0.25, 0, 0);
     createGroundTexture();
   }
   if (pTwoCounter >= 80) {
+    if (pTwoCounter == 80) newColours = true;
     pTwo = false;
     pThree = true;
     createGroundTexture();
+    if (newColours) {
+      calculatePhaseThreeColoursForCentreBuildings();
+      newColours = false;
+    }
   }
   pTwoCounter += 1;
 }
@@ -582,8 +594,7 @@ function phaseTwo() {
  * Phase III controlling function.
  */
 function phaseThree() {
-  pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
-  pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
+  //lightFalloff(0.25, 0, 0);
   pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
   moveCameraPThree();
   showInfoFacingCamera();
@@ -640,10 +651,10 @@ function moveCameraPOne() {
 }
 
 /**
- * All Phases - City generation. 
+ * City generation (Phase I and Phase II)
  * This code creates the middle block of buildings that reflect emotions from the words.
  */
-function generateCityNet() {
+function generateCityNetPOnePTwo() {
   var siz = cityCentreX.length;
   for (i = 0; i < siz; ++i) {
     push();
@@ -656,7 +667,30 @@ function generateCityNet() {
   noStroke();
 }
 
+/**
+ * City generation (Phase III)
+ * This code creates the middle block of buildings that reflect emotions from the words.
+ */
+function generateCityNetPThree() {
+  var siz = cityCentreX.length;
+  for (i = 0; i < siz; ++i) {
+    push();
+    stroke(red(cityCentreSC[i]), green(cityCentreSC[i]), blue(cityCentreSC[i]));
+    if (alpha(cityCentreSC[i]) == 100) {
+      ambientMaterial(red(cityCentreFC[i]), green(cityCentreFC[i]), blue(cityCentreFC[i]));
+    } else {
+      fill(red(cityCentreFC[i]), green(cityCentreFC[i]), blue(cityCentreFC[i]), alpha(cityCentreFC[i]));
+    }
+    translate(cityCentreX[i], cityCentreY[i], cityCentreH[i]/2);
+    box(20, 20, cityCentreH[i]);
+    pop();
+  }
+  noStroke();
+}
 
+/**
+ * Calculates the positions of buildings in city centre.
+ */
 function calculateCityCentreBuildingsPositions() {
   var i = 0;
   var j = 0;
@@ -669,30 +703,6 @@ function calculateCityCentreBuildingsPositions() {
       cityCentreX.push(x);
       cityCentreY.push(y);
       cityCentreH.push(height);
-
-      //var opa = setOpacityToBuilding(i, j);
-      // push();
-      // translate(x, y, height/2);
-      // ambientMaterial(40);
-      // stroke(60);
-      // if ((pTwo && pTwoCounter >= 80) || pThree) {
-      //   var ratio = height / maxHeight;
-      //   var newCol = [pickedColour[0] + ratio * (255 - pickedColour[0]),
-      //                 pickedColour[1] + ratio * (255 - pickedColour[1]),
-      //                 pickedColour[2] + ratio * (255 - pickedColour[2])];
-      //   if (opa == 100) {
-      //     stroke(newCol[0], newCol[1], newCol[2]);
-      //     newCol = [pickedColour[0] * ratio, pickedColour[1] * ratio, pickedColour[2] * ratio];
-      //     ambientMaterial(newCol[0], newCol[1], newCol[2]);
-      //   } else {
-      //     stroke(newCol[0] - 80, newCol[1] - 80, newCol[2] - 80, opa);
-      //     newCol = [pickedColour[0] * ratio, pickedColour[1] * ratio, pickedColour[2] * ratio];
-      //     fill(newCol[0], newCol[1], newCol[2], opa);
-      //   }
-      // }
-      // box(20, 20, height);
-      // pop();
-
       i += 1;
     }
     j += 1;
@@ -701,11 +711,11 @@ function calculateCityCentreBuildingsPositions() {
 }
 
 /**
- * 
- * @param x 
- * @param y 
- * @param localX 
- * @param localY 
+ * Calculates the height of buildings in city centre.
+ * @param x global x coordinate
+ * @param y global y coordinate
+ * @param localX local x coordinate of the building in the grid
+ * @param localY local y coordinate of the building in the grid
  */
 function calculateHeightOfBuilding(x, y, localX, localY) {
   var height = maxHeight;
@@ -722,6 +732,9 @@ function calculateHeightOfBuilding(x, y, localX, localY) {
   return height;
 }
 
+/**
+ * Calculates colours for the city centre in Phase I and Phase II.
+ */
 function calculateBaseColoursForCentreBuldings() {
   var siz = cityCentreX.length;
   for (i = 0; i < siz; ++i) {
@@ -730,8 +743,37 @@ function calculateBaseColoursForCentreBuldings() {
   }
 }
 
+/**
+ * Calculates colours for the city centre in Phase III.
+ */
 function calculatePhaseThreeColoursForCentreBuildings() {
+  cityCentreSC = [];
+  cityCentreFC = [];
 
+  var siz = cityCentreX.length;
+  for (i = 0; i < siz; ++i) {
+
+    var localy = int(i / 6);
+    var localx = i - localy * 6;
+
+    print(localy + " " + localx);
+
+    var opa = setOpacityToBuilding(localx, localy);
+
+    var ratio = cityCentreH[i] / maxHeight;
+    var newCol = [pickedColour[0] + ratio * (255 - pickedColour[0]),
+                  pickedColour[1] + ratio * (255 - pickedColour[1]),
+                  pickedColour[2] + ratio * (255 - pickedColour[2])];
+    if (opa == 100) {
+      cityCentreSC.push(color(newCol[0], newCol[1], newCol[2], opa));
+      newCol = [pickedColour[0] * ratio, pickedColour[1] * ratio, pickedColour[2] * ratio];
+      cityCentreFC.push(color(newCol[0], newCol[1], newCol[2], opa));
+    } else {
+      cityCentreSC.push(color(newCol[0] - 80, newCol[1] - 80, newCol[2] - 80, opa));
+      newCol = [pickedColour[0] * ratio, pickedColour[1] * ratio, pickedColour[2] * ratio];
+      cityCentreFC.push(color(newCol[0], newCol[1], newCol[2], opa));
+    }
+  }
 }
 
 /**
@@ -757,7 +799,7 @@ function getValuesAroundBuilding(x, y) {
 }
 
 /**
- * If a word
+ * If a word is not find, the building is semitransparent
  */
 function setOpacityToBuilding(x, y) {
   var wI = int((y * 6 + x) / 10);
@@ -816,6 +858,10 @@ function generateOutskirtsParts(xMin, xMax, yMin, yMax) {
   }
 }
 
+/**
+ * Depending on the distance from the centre, the colour of stroke for outskirts buildings is set.
+ * @param d distance from the origin (centre of the city)
+ */
 function setStrokeColourBuildings(d) {
   stroke(50);
   if ((pTwo && pTwoCounter >= 80) || pThree) {
@@ -844,17 +890,17 @@ function calcuteOutskirtsBuildingsHeight(x, y, d) {
 }
 
 /**
- * 
- * @param xMin 
- * @param xMax 
- * @param yMin 
- * @param yMax 
+ * Calculates the scattered buildings around the city centre and outskirts.
+ * @param xMin boundary.
+ * @param xMax boundary.
+ * @param yMin boundary.
+ * @param yMax boundary.
  */
 function calculateScatteredBuildings(xMin, xMax, yMin, yMax) {
   for (y = yMin; y < yMax; y += 24) {
     for (x = xMin; x < xMax; x += 24) {
       var d = dist(0, 0, x, y);
-      var r = (sin(x) / cos(y) - 1.3);
+      var r = (sin(x -20) / cos(y) - 1.3);
       if (r < 0 || d > 400) continue;
       var h = 0;
       scatteredBA.push(150 - (d/400)*100);
@@ -869,13 +915,11 @@ function calculateScatteredBuildings(xMin, xMax, yMin, yMax) {
 }
 
 /**
- * 
+ * Generates the scattered buildings.
  */
 function drawScatteredBuildings() {
-  //var d = 0;
   var siz = scatteredBH.length;
   for (i = 0; i < siz; i++) {
-    //d = dist(0, 0, scatteredBX[i], scatteredBY[i]);
     push();
     translate(scatteredBX[i], scatteredBY[i], scatteredBH[i]/2);
     stroke(30);
