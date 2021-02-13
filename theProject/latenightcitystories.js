@@ -64,6 +64,12 @@ var cityCentreFC;
 var cityCentreSC;
 var newColours;
 
+var outskirtsX;
+var outskirtsY;
+var outskirtsH;
+var outskirtsFC;
+var outskirtsSC;
+
 var scatteredBX;
 var scatteredBY;
 var scatteredBH;
@@ -161,7 +167,7 @@ function setupVariables() {
   coldColour = [3, 75, 252];
   pickedColour = [];
   planeTextAngle = 0;
-  planeTextTexture = createGraphics(112, 112);
+  planeTextTexture = createGraphics(180, 180);
   averageEmos = [];
   emotionsStrings = ["positive", "negative", "anger", "anticipation", "disgust", "fear", "joy", "sadness", "surprise", "trust"];
   fancySymbols = ["°", "'", "''", "/", ",", ".", ";", ":"];
@@ -495,6 +501,7 @@ function createPolaroid() {
   polaroid.text(firstWord + ". " + secondWord + ". " + thirdWord + ".", 350, 730)
 
   save(polaroid, "late_night_city_stories_" + hour() + "_" + minute() + ".png");
+  //polaroid.remove();
 }
 
 /**
@@ -944,7 +951,7 @@ function createGroundTexture() {
       planeRoadsTexture.fill(newCol[0], 
                              newCol[1],
                              newCol[2],
-                             ((100 - d) / 100) * 255 - 137);
+                             ((100 - d) / 100) * 255 - 150);
       planeRoadsTexture.square(x, y, 10);
     }
   } 
@@ -992,7 +999,6 @@ function showInfoFacingCamera() {
  * Creates texture for the plane behind the city always facing the camera.
  */
 function createPlaneCameraTexture() {
-  planeTextTexture = createGraphics(224, 224);
   planeTextTexture.clear();
   planeTextTexture.noStroke();
   planeTextTexture.background(0, 0);
@@ -1015,13 +1021,13 @@ function drawBuildingsNetInfo() {
       } else {
         planeTextTexture.fill(35 + random(-10, 10));
       }
-      planeTextTexture.square(10 + i * 6, 10 + j * 6, 3);
+      planeTextTexture.square(10 + i * 6, 7 + j * 6, 3);
 
       var v = (i + j * 6);
       if (v % 10 == 0 && v != 0) {
         push();
         planeTextTexture.fill(200 + random(-30, 30));
-        planeTextTexture.rect(10 - 2 + i * 6, 10 + 1 + j * 6, 1, 1);
+        planeTextTexture.rect(10 - 2 + i * 6, 7 + 1 + j * 6, 1, 1);
         pop();
       }
     }
@@ -1039,7 +1045,7 @@ function drawInfoEmotions() {
   planeTextTexture.textSize(5);
   planeTextTexture.textAlign(LEFT);
   var cur = int(averageEmos[curF] * 100);
-  planeTextTexture.text(cur + "% " + emotionsStrings[curF], 10, 43);   //+ i * 5
+  planeTextTexture.text(cur + "% " + emotionsStrings[curF], 10, 40);   //+ i * 5
   pop();
 }
 
@@ -1062,11 +1068,11 @@ function drawCoordinates() {
   push();
   planeTextTexture.fill(125 + random(-15, 15));
   planeTextTexture.textFont("Courier New");
-  planeTextTexture.textSize(6);
+  planeTextTexture.textSize(5);
   planeTextTexture.textAlign(RIGHT);
-  planeTextTexture.text(fW, 214, 15);
-  planeTextTexture.text(sW, 214, 24);
-  planeTextTexture.text(tW, 214, 33);
+  planeTextTexture.text(fW, 174, 12);
+  planeTextTexture.text(sW, 174, 19);
+  planeTextTexture.text(tW, 174, 26);
   pop();
 }
 
@@ -1112,7 +1118,7 @@ function drawPotentialErrorText() {
     planeTextTexture.textFont("Courier New");
     planeTextTexture.textSize(5);
     planeTextTexture.textAlign(RIGHT);
-    planeTextTexture.text(errorSumText, 214, 43);
+    planeTextTexture.text(errorSumText, 174, 40);
     pop();
   }
 }
