@@ -524,7 +524,7 @@ function createPolaroid() {
   polaroid.text(firstWord + ". " + secondWord + ". " + thirdWord + ".", 350, 730)
 
   save(polaroid, "late_night_city_stories_" + hour() + "_" + minute() + ".png");
-  //polaroid.remove();
+  polaroid.remove();
 }
 
 /**
@@ -791,8 +791,6 @@ function calculatePhaseThreeColoursForCentreBuildings() {
     var localy = int(i / 6);
     var localx = i - localy * 6;
 
-    print(localy + " " + localx);
-
     var opa = setOpacityToBuilding(localx, localy);
 
     var ratio = cityCentreH[i] / maxHeight;
@@ -1049,13 +1047,13 @@ function drawBuildingsNetInfo() {
       } else {
         planeTextTexture.fill(35 + random(-10, 10));
       }
-      planeTextTexture.square(10 + i * 6, 7 + j * 6, 3);
+      planeTextTexture.square(10 + i * 4, 7 + j * 4, 3);
 
       var v = (i + j * 6);
       if (v % 10 == 0 && v != 0) {
         push();
         planeTextTexture.fill(200 + random(-30, 30));
-        planeTextTexture.rect(10 - 2 + i * 6, 7 + 1 + j * 6, 1, 1);
+        planeTextTexture.rect(10 - 1 + i * 4, 7 + 1 + j * 4, 1, 1);
         pop();
       }
     }
@@ -1070,10 +1068,10 @@ function drawInfoEmotions() {
   push();
   planeTextTexture.fill(125 + random(-15, 15));
   planeTextTexture.textFont("Courier New");
-  planeTextTexture.textSize(5);
+  planeTextTexture.textSize(4.5);
   planeTextTexture.textAlign(LEFT);
   var cur = int(averageEmos[curF] * 100);
-  planeTextTexture.text(cur + "% " + emotionsStrings[curF], 10, 40);   //+ i * 5
+  planeTextTexture.text(cur + "% " + emotionsStrings[curF], 10, 32);   //+ i * 5
   pop();
 }
 
@@ -1099,8 +1097,8 @@ function drawCoordinates() {
   planeTextTexture.textSize(5);
   planeTextTexture.textAlign(RIGHT);
   planeTextTexture.text(fW, 174, 12);
-  planeTextTexture.text(sW, 174, 19);
-  planeTextTexture.text(tW, 174, 26);
+  planeTextTexture.text(sW, 174, 17);
+  planeTextTexture.text(tW, 174, 22);
   pop();
 }
 
@@ -1144,9 +1142,9 @@ function drawPotentialErrorText() {
     push();
     planeTextTexture.fill(90 + random(-15, 15));
     planeTextTexture.textFont("Courier New");
-    planeTextTexture.textSize(5);
+    planeTextTexture.textSize(4.5);
     planeTextTexture.textAlign(RIGHT);
-    planeTextTexture.text(errorSumText, 174, 40);
+    planeTextTexture.text(errorSumText, 174, 32);
     pop();
   }
 }
