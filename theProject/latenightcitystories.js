@@ -509,19 +509,20 @@ function saveImage() {
  * Creates polaroid for the save in the off-screen renderer.
  */
 function createPolaroid() {
-  polaroid = createGraphics(700, 840);
+  var large = 1;    //minimum for project deadline 4.2
+  polaroid = createGraphics(700 * large, 840 * large);
   polaroid.background(polaroidColour);
   push();
   polaroid.fill(0);
-  polaroid.rect(50, 50, 600, 600);
+  polaroid.rect(50 * large, 50 * large, 600 * large, 600 * large);
   pop();
-  polaroid.copy(canvas, 0, 0, 600, 600, 50, 50, 600, 600);
+  polaroid.copy(canvas, 0, 0, 600, 600, 50 * large, 50 * large, 600 * large, 600 * large);
 
   polaroid.fill(polaroidText);
   polaroid.textFont("Courier New");
-  polaroid.textSize(18);
+  polaroid.textSize(18 * large);
   polaroid.textAlign(CENTER);
-  polaroid.text(firstWord + ". " + secondWord + ". " + thirdWord + ".", 350, 730)
+  polaroid.text(firstWord + ". " + secondWord + ". " + thirdWord + ".", 350 * large, 730 * large)
 
   save(polaroid, "late_night_city_stories_" + hour() + "_" + minute() + ".png");
   polaroid.remove();
@@ -933,7 +934,7 @@ function calculateScatteredBuildings(xMin, xMax, yMin, yMax) {
   for (y = yMin; y < yMax; y += 24) {
     for (x = xMin; x < xMax; x += 24) {
       var d = dist(0, 0, x, y);
-      var r = (sin(x) / cos(y) - 0.95);  //* cos(x) * sin(y);
+      var r = (sin(x) / cos(y) - 0.95);
       if (r < 0 || d > 400) continue;
       var h = 0;
       scatteredBA.push(150 - (d/400)*100);
