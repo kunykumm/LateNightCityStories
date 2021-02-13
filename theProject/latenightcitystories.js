@@ -57,6 +57,12 @@ var pOneCamAngle;
 var camInfo;
 var planeRoadsTexture;
 
+var cityCentreX;
+var cityCentreY;
+var cityCentreH;
+var cityCentreFC;
+var cityCentreSC;
+
 var scatteredBX;
 var scatteredBY;
 var scatteredBH;
@@ -164,6 +170,11 @@ function setupVariables() {
   whatWordsWereFound = [false, false, false];
   notFoundSum = 0;
   showErrorText = false;
+  cityCentreX = [];
+  cityCentreY = [];
+  cityCentreH = [];
+  cityCentreFC = [];
+  cityCentreSC = [];
   scatteredBX = [];
   scatteredBY = [];
   scatteredBH = [];
@@ -217,6 +228,10 @@ function getWords() {
   makeSumOfOnes();
   averageEmotions();
   generateErrorText();
+
+  //Precalculate the city centre
+  calculateCityCentreBuildingsPositions();
+  calculateBaseColoursForCentreBuldings();
 
   generate = true;
   pOne = true;
@@ -599,7 +614,7 @@ function slideCameraFade() {
   push();
   noStroke();
   translate(0, 0, maxHeight + 20);
-  plane(width, height);
+  plane(width + 200, height + 200);
   pop();
 }
 
@@ -629,53 +644,94 @@ function moveCameraPOne() {
  * This code creates the middle block of buildings that reflect emotions from the words.
  */
 function generateCityNet() {
+  var siz = cityCentreX.length;
+  for (i = 0; i < siz; ++i) {
+    push();
+    translate(cityCentreX[i], cityCentreY[i], cityCentreH[i]/2);
+    ambientMaterial(red(cityCentreFC[i]), green(cityCentreFC[i]), blue(cityCentreFC[i]));
+    stroke(red(cityCentreSC[i]), green(cityCentreSC[i]), blue(cityCentreSC[i]));
+    box(20, 20, cityCentreH[i]);
+    pop();
+  }
+  noStroke();
+}
+
+
+function calculateCityCentreBuildingsPositions() {
   var i = 0;
   var j = 0;
 
   for (y = -58; y < 60; y += 24) {
     for(x = -70; x < 70; x += 24) {
       
-      var height = maxHeight;
-      if (allEmotions[j][i] == '0') {
-        value = getValuesAroundBuilding(i, j);
-        if (value == 0) {
-          var h = abs(i * 0.1 + x/100 - (j * 0.1 + y/100));
-          if (h > 0.65) h = abs(h - 1);
-          height = height * h / 4;
-        } else {
-          height = height * value / 4;
-        }
-      }
+      var height = calculateHeightOfBuilding(x, y, i, j);
 
-      push();
-      var opa = setOpacityToBuilding(i, j);
-      translate(x, y, height/2);
-      ambientMaterial(40);
-      stroke(60);
-      if ((pTwo && pTwoCounter >= 80) || pThree) {
-        var ratio = height / maxHeight;
-        var newCol = [pickedColour[0] + ratio * (255 - pickedColour[0]),
-                      pickedColour[1] + ratio * (255 - pickedColour[1]),
-                      pickedColour[2] + ratio * (255 - pickedColour[2])];
-        if (opa == 100) {
-          stroke(newCol[0], newCol[1], newCol[2]);
-          newCol = [pickedColour[0] * ratio, pickedColour[1] * ratio, pickedColour[2] * ratio];
-          ambientMaterial(newCol[0], newCol[1], newCol[2]);
-        } else {
-          stroke(newCol[0] - 80, newCol[1] - 80, newCol[2] - 80, opa);
-          newCol = [pickedColour[0] * ratio, pickedColour[1] * ratio, pickedColour[2] * ratio];
-          fill(newCol[0], newCol[1], newCol[2], opa);
-        }
-      }
-      box(20, 20, height);
-      pop();
+      cityCentreX.push(x);
+      cityCentreY.push(y);
+      cityCentreH.push(height);
+
+      //var opa = setOpacityToBuilding(i, j);
+      // push();
+      // translate(x, y, height/2);
+      // ambientMaterial(40);
+      // stroke(60);
+      // if ((pTwo && pTwoCounter >= 80) || pThree) {
+      //   var ratio = height / maxHeight;
+      //   var newCol = [pickedColour[0] + ratio * (255 - pickedColour[0]),
+      //                 pickedColour[1] + ratio * (255 - pickedColour[1]),
+      //                 pickedColour[2] + ratio * (255 - pickedColour[2])];
+      //   if (opa == 100) {
+      //     stroke(newCol[0], newCol[1], newCol[2]);
+      //     newCol = [pickedColour[0] * ratio, pickedColour[1] * ratio, pickedColour[2] * ratio];
+      //     ambientMaterial(newCol[0], newCol[1], newCol[2]);
+      //   } else {
+      //     stroke(newCol[0] - 80, newCol[1] - 80, newCol[2] - 80, opa);
+      //     newCol = [pickedColour[0] * ratio, pickedColour[1] * ratio, pickedColour[2] * ratio];
+      //     fill(newCol[0], newCol[1], newCol[2], opa);
+      //   }
+      // }
+      // box(20, 20, height);
+      // pop();
 
       i += 1;
     }
     j += 1;
     i = 0; 
   }
-  noStroke();
+}
+
+/**
+ * 
+ * @param x 
+ * @param y 
+ * @param localX 
+ * @param localY 
+ */
+function calculateHeightOfBuilding(x, y, localX, localY) {
+  var height = maxHeight;
+  if (allEmotions[localY][localX] == '0') {
+    value = getValuesAroundBuilding(localX, localY);
+    if (value == 0) {
+      var h = abs(localX * 0.1 + x/100 - (localY * 0.1 + y/100));
+      if (h > 0.65) h = abs(h - 1);
+      height = height * h / 4;
+    } else {
+      height = height * value / 4;
+    }
+  }
+  return height;
+}
+
+function calculateBaseColoursForCentreBuldings() {
+  var siz = cityCentreX.length;
+  for (i = 0; i < siz; ++i) {
+    cityCentreFC.push(color(40, 40, 40, 100));
+    cityCentreSC.push(color(60, 60, 60, 100));
+  }
+}
+
+function calculatePhaseThreeColoursForCentreBuildings() {
+
 }
 
 /**
@@ -816,10 +872,10 @@ function calculateScatteredBuildings(xMin, xMax, yMin, yMax) {
  * 
  */
 function drawScatteredBuildings() {
-  var d = 0;
+  //var d = 0;
   var siz = scatteredBH.length;
   for (i = 0; i < siz; i++) {
-    d = dist(0, 0, scatteredBX[i], scatteredBY[i]);
+    //d = dist(0, 0, scatteredBX[i], scatteredBY[i]);
     push();
     translate(scatteredBX[i], scatteredBY[i], scatteredBH[i]/2);
     stroke(30);
