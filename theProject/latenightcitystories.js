@@ -46,6 +46,8 @@ var polaroidColour;
 var polaroidText;
 var isPolaroidPicked;
 
+var firstPicTexture;
+
 // PHASE I.
 
 var maxHeight;
@@ -127,7 +129,7 @@ function setup() {
 function setupWindow() {
   canvas = createCanvas(600, 600, WEBGL);
   canvas.position(345, 50);
-  canvas.background(30);
+  canvas.background(0);
 }
 
 /**
@@ -192,6 +194,27 @@ function setupVariables() {
   calculateScatteredBuildings(-454, 458, 206, 425);
   calculateScatteredBuildings(-454, -200, -176, 182);
   calculateScatteredBuildings(194, 450, -176, 182);
+  firstPicTexture = createGraphics(180, 180);
+}
+
+function drawFirstPic() {
+  push();
+  noStroke();
+  firstPicTexture.background(0);
+  firstPicTexture.fill(255);
+  firstPicTexture.textFont("Courier New");
+  firstPicTexture.textSize(6);
+  firstPicTexture.textAlign(LEFT);
+  firstPicTexture.text("Late Night City Stories", 5, 8);
+  firstPicTexture.textSize(5);
+  firstPicTexture.fill(120);
+  firstPicTexture.text("Tell me yours.", 5, 15);
+  translate(0, 0, 0);
+  rotateY(radians(-20));
+  rotateX(radians(20));
+  texture(firstPicTexture);
+  plane(650, 650);
+  pop();
 }
 
 
@@ -509,7 +532,10 @@ function createPolaroid() {
  * Restores application to the default state.
  */
 function restartCity() {
-  canvas.background(30);
+  canvas.background(0);
+  planeRoadsTexture.remove();
+  planeTextTexture.remove();
+  firstPicTexture.remove();
   setupVariables();
 }
 
@@ -523,7 +549,10 @@ function restartCity() {
  * Contains conditions for each phase.
  */
 function draw() {
-  if (!generate) return;
+  if (!generate) {
+    drawFirstPic();
+    return;
+  };
   
   canvas.background(0);
   lights();
@@ -601,7 +630,6 @@ function phaseTwo() {
  * Phase III controlling function.
  */
 function phaseThree() {
-  //lightFalloff(0.25, 0, 0);
   pointLight(pickedColour[0], pickedColour[1], pickedColour[2], 0, 0, maxHeight / 6);
   moveCameraPThree();
   showInfoFacingCamera();
