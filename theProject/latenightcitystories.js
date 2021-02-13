@@ -189,9 +189,9 @@ function setupVariables() {
   scatteredBA = [];
   newColours = false;
   calculateScatteredBuildings(-454, 458, -442, -200);
-  calculateScatteredBuildings(-454, 458, 187, 425);
-  calculateScatteredBuildings(-454, -68, -58, 60);
-  calculateScatteredBuildings(80, 450, -58, 60);
+  calculateScatteredBuildings(-454, 458, 206, 425);
+  calculateScatteredBuildings(-454, -200, -176, 182);
+  calculateScatteredBuildings(194, 450, -176, 182);
 }
 
 
@@ -907,7 +907,7 @@ function calculateScatteredBuildings(xMin, xMax, yMin, yMax) {
   for (y = yMin; y < yMax; y += 24) {
     for (x = xMin; x < xMax; x += 24) {
       var d = dist(0, 0, x, y);
-      var r = (sin(x -20) / cos(y) - 1.3);
+      var r = (sin(x) / cos(y) - 0.95);  //* cos(x) * sin(y);
       if (r < 0 || d > 400) continue;
       var h = 0;
       scatteredBA.push(150 - (d/400)*100);
