@@ -256,7 +256,6 @@ function getWords() {
 
   validateWords();
   fillAllEmotions();
-  print(allEmotions);
   makeSumOfOnes();
   averageEmotions();
   generateErrorText();
@@ -276,7 +275,6 @@ function validateWords() {
   firstEmotions = validateAWord(firstWord, 1);
   secondEmotions = validateAWord(secondWord, 2);
   thirdEmotions = validateAWord(thirdWord, 3);
-  print(whatWordsWereFound[0] + " " + whatWordsWereFound[1] + " " + whatWordsWereFound[2]);
 }
 
 /**
@@ -298,7 +296,6 @@ function fillAllEmotions() {
  * Returns the array of emotions for current word.
  */
 function validateAWord(word, wI) {
-  print("WordValidation START");
   word = word.toLowerCase();
   var index = findFirstLetterIndexRange(word);
   var start = 0;
@@ -333,7 +330,6 @@ function validateAWord(word, wI) {
  */
 function findFirstLetterIndexRange(word) {
   var index = word.charCodeAt(0) - "a".charCodeAt();
-  print("FirstLetter: " + index);
   return index;
 }
 
@@ -345,15 +341,11 @@ function findFirstLetterIndexRange(word) {
  * Returns index in the lexicon.
  */
 function findWordInJson(word, start, stop) {
-  print(start);
-  print(stop);
   for (i = start; i < stop; i++) {
     if (jsonData[i].En == word) {
-      print("Word found: " + word)
       return i;
     }
   }
-  print("Word not found.");
   return -1;
 }
 
@@ -365,15 +357,12 @@ function findWordInJson(word, start, stop) {
  */
 function findTheEmotions(wordIndex) {
   if (wordIndex == -1) {
-
     var options = ['0', '1'];
     emotions = [];
     for (i = 0; i < 10; ++i) {
       emotions.push(random(options));
     }
-
   } else {
-
     emotions = [
                 jsonData[wordIndex].Positive,
                 jsonData[wordIndex].Negative,
@@ -387,9 +376,6 @@ function findTheEmotions(wordIndex) {
                 jsonData[wordIndex].Trust
                 ]
   }
-
-  print(emotions);
-  print("Emotions filled.");
   return emotions;
 }
 
@@ -509,7 +495,7 @@ function saveImage() {
  * Creates polaroid for the save in the off-screen renderer.
  */
 function createPolaroid() {
-  var large = 1;    //minimum for project deadline 4.2
+  var large = 2;    //minimum for project deadline 4.2
   polaroid = createGraphics(700 * large, 840 * large);
   polaroid.background(polaroidColour);
   push();
