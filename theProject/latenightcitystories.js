@@ -141,6 +141,16 @@ function updateProgressSecond() {
 }
 
 /**
+ * Shows information about saving the image.
+ */
+function updateProgressSaving() {
+  var dot = '.';
+  document.getElementById("progress_text").innerText = "Saving the polaroid " + dot.repeat(progressCounter + 1);
+  progressCounter++;
+  progressCounter = progressCounter % 10;
+}
+
+/**
  * Sets up the canvas and all variables.
  */
 function setup() {
@@ -165,6 +175,13 @@ function setupWindow() {
  * Sets up all variables.
  */
 function setupVariables() {
+
+  var pD = pixelDensity();
+  //print(pD);
+  if (pD < 2) {
+    pixelDensity(2);
+  }
+
   generate = false;
   pOne = false;
   pTwo = false;
@@ -520,7 +537,12 @@ function saveImage() {
     alert("Pick polaroid colour.");
     return;
   }
+  //progressCounter = 0;
+  //intervalChange = setInterval(updateProgressSaving, 150)
   createPolaroid();
+  //clearInterval(intervalChange);
+  //document.getElementById("progress_text").innerText = "Vizualization complete.";
+  //progressCounter = 0;
 }
 
 /**
