@@ -12,7 +12,7 @@ div.mood {
     top: 88px;
     color: #888888;
     font-family: 'Courier New', monospace;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 div.warmBtn {
@@ -31,7 +31,7 @@ div.coldBtn {
     border: none;
     background-color: #1a1a1a;
     padding: 7px 20px;
-    font-size: 12px;
+    font-size: 13px;
     cursor: pointer;
     display: inline-block;
     font-family: 'Courier New', monospace;
@@ -41,7 +41,7 @@ div.coldBtn {
     border: none;
     background-color: #ffffff;
     padding: 7px 20px;
-    font-size: 12px;
+    font-size: 13px;
     cursor: pointer;
     display: inline-block;
     font-family: 'Courier New', monospace;
@@ -51,7 +51,7 @@ div.coldBtn {
     border: none;
     background-color: #000000;
     padding: 7px 20px;
-    font-size: 12px;
+    font-size: 13px;
     cursor: pointer;
     display: inline-block;
     font-family: 'Courier New', monospace;
@@ -59,7 +59,7 @@ div.coldBtn {
 
 .btnRE {
     border: none;
-    background-color: #000000;
+    background-color: #1a1a1a;
     padding: 7px 20px;
     font-size: 12px;
     cursor: pointer;
@@ -80,8 +80,8 @@ div.coldBtn {
 .pWhite:hover {background: rgb(207, 207, 207);}
 .pBlack {color: rgb(255, 255, 255);}
 .pBlack:hover {background: rgb(32, 32, 32);}
-.rest {color: #575757;}
-.rest:hover {background: rgb(22, 22, 22);}
+.rest {color: #8d8c8c;}
+.rest:hover {background: rgb(32, 32, 32);}
 input[type="submit"]:hover {background: black}
 
 div.story {
@@ -90,7 +90,7 @@ div.story {
     top: 155px;
     color: #888888;
     font-family: 'Courier New', monospace;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 div.progress {
@@ -138,7 +138,7 @@ div.speed {
     top: 302px;
     color: #888888;
     font-family: 'Courier New', monospace;
-    font-size: 12px;
+    font-size: 13px;
     white-space: pre;
 }
 
@@ -150,13 +150,13 @@ div.slowerButton {
 
 div.pauseButton {
     position: fixed;
-    left: 110px;
+    left: 113px;
     top: 368px;
 }
 
 div.fasterButton {
     position: fixed;
-    left: 193px;
+    left: 200px;
     top: 368px;
 }
 
@@ -166,7 +166,7 @@ div.polaroidColour {
     top: 402px;
     color: #888888;
     font-family: 'Courier New', monospace;
-    font-size: 12px;
+    font-size: 13px;
     white-space: pre;
 }
 
@@ -178,7 +178,7 @@ div.whitePolaroid {
 
 div.blackPolaroid {
     position: fixed;
-    left: 112px;
+    left: 115px;
     top: 440px;
 }
 
@@ -254,9 +254,9 @@ div.restart {
     position: fixed;
     left: 27px;
     top: 495px;
-    color: #575757;
+    color: #8d8c8c;
     font-family: 'Courier New', monospace;
-    font-size: 12px;
+    font-size: 13px;
     white-space: pre;
 }
 
