@@ -2,6 +2,8 @@
 // JSON file online: https://api.npoint.io/9e0b7a74e41f4a55ee5e
 var jsonData;
 var jsonEndIndices;
+var progressT;
+var progressCounter;
 
 // HTML STUFF
 var title;
@@ -107,11 +109,35 @@ var showErrorText;
  * The 'NRC Word-Emotion Association Lexicon' mentioned above is used in this project for non-commercial research and educational purposes.
  */
 function preload() {
+  progressCounter = 0;
+  intervalChange = setInterval(updateProgressFirst, 150);   //1000 - 1 second
+
   jsonEndIndices = [966, 1682, 3112, 4052, 4689, 5311, 5732, 6199, 6922, 7028, 7103, 7568, 8268,
                     8506, 8858, 10039, 10108, 10919, 12480, 13172, 13551, 13808, 14126, 14128,
                     14165, 14181];
   var jsonUrl = 'https://api.npoint.io/9e0b7a74e41f4a55ee5e';
   jsonData = loadJSON(jsonUrl /**, processJsonData**/);
+
+}
+
+/**
+ * Shows information about loading the page at the beginning.
+ */
+function updateProgressFirst() {
+  var dot = '.';
+  document.getElementById("progress_text").innerText = "Loading the page " + dot.repeat(progressCounter + 1);
+  progressCounter++;
+  progressCounter = progressCounter % 10;
+}
+
+/**
+ * Shows information about generating the city.
+ */
+function updateProgressSecond() {
+  var dot = '.';
+  document.getElementById("progress_text").innerText = "Generating the city " + dot.repeat(progressCounter + 1);
+  progressCounter++;
+  progressCounter = progressCounter % 10;
 }
 
 /**
@@ -121,6 +147,9 @@ function setup() {
   setupWindow();
   setupVariables();
   frameRate(30);
+  clearInterval(intervalChange);
+  document.getElementById("progress_text").innerText = "Page loaded. Now you can generate your city.";
+  progressCounter = 0;
 }
 
 /**
@@ -195,6 +224,7 @@ function setupVariables() {
   calculateScatteredBuildings(-454, -200, -176, 182);
   calculateScatteredBuildings(194, 450, -176, 182);
   firstPicTexture = createGraphics(180, 180);
+  progressCounter = 0;
 }
 
 function drawFirstPic() {
@@ -266,6 +296,7 @@ function getWords() {
 
   generate = true;
   pOne = true;
+  intervalChange = setInterval(updateProgressSecond, 150);
 }
 
 /**
@@ -520,11 +551,19 @@ function createPolaroid() {
  * Restores application to the default state.
  */
 function restartCity() {
+  clearInterval(intervalChange);
+  progressCounter = 0;
+  intervalChange = setInterval(updateProgressFirst, 150);
+
   canvas.background(0);
   planeRoadsTexture.remove();
   planeTextTexture.remove();
   firstPicTexture.remove();
   setupVariables();
+
+  clearInterval(intervalChange);
+  document.getElementById("progress_text").innerText = "Page refreshed. Now you can generate your city.";
+  progressCounter = 0;
 }
 
 
@@ -552,7 +591,11 @@ function draw() {
   else if (pTwo) {
     phaseTwo();
     if (pTwoCounter < 80) generateCityNetPOnePTwo();
-    else generateCityNetPThree();
+    else { 
+      generateCityNetPThree();
+      clearInterval(intervalChange);
+      document.getElementById("progress_text").innerText = "Vizualization complete.";
+    }
   }
   else if (pThree) {
     phaseThree();
