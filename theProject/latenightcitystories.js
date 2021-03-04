@@ -148,7 +148,7 @@ function setup() {
   setupVariables();
   frameRate(30);
   clearInterval(intervalChange);
-  document.getElementById("progress_text").innerText = "Page loaded. Now you can generate your city.";
+  document.getElementById("progress_text").innerText = "Page loaded. You can generate your city now.";
   progressCounter = 0;
 }
 
@@ -562,7 +562,7 @@ function restartCity() {
   setupVariables();
 
   clearInterval(intervalChange);
-  document.getElementById("progress_text").innerText = "Page refreshed. Now you can generate your city.";
+  document.getElementById("progress_text").innerText = "Page refreshed. You can generate your city now.";
   progressCounter = 0;
 }
 
