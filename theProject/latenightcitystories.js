@@ -446,6 +446,7 @@ function changeSpeedPThree(value) {
  * @param value -1 for cold colour (blue), 1 for hot colour (orange)
  */
 function changeColourMood(value) {
+  if (generate) return;
   moodColour = value;
   if (value == -1) {
     pickedColour = coldColour;
